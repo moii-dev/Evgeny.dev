@@ -1,8 +1,8 @@
 import { GitHubRepo, Project } from '../types/project';
 import { ALL_LOCAL_PROJECTS, FEATURED_PROJECTS } from '../data/featuredProjects';
 
-const CACHE_KEY = 'evgeny_portfolio_github_repos_v3';
-const CACHE_TIMESTAMP_KEY = 'evgeny_portfolio_github_timestamp_v3';
+const CACHE_KEY = 'evgeny_portfolio_github_repos_v4';
+const CACHE_TIMESTAMP_KEY = 'evgeny_portfolio_github_timestamp_v4';
 const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
 
 export interface GitHubStats {

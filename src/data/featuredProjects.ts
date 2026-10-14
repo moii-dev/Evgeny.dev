@@ -3,36 +3,39 @@ import { Project } from '../types/project';
 /**
  * FEATURED_PROJECTS (Selected Projects)
  *
- * Excluded per explicit user request:
+ * Curated Selection of moii-dev's Strongest, Most Technical & Visually Compelling Public Repositories:
+ *
+ * 01. FreeChat (Android AI Assistant & Full-Stack Cloud Routing)
+ *     - Kotlin, Jetpack Compose, Material 3, Node.js, PostgreSQL
+ *     - Flagship project per user specification
+ *
+ * 02. WorldBox-React (Interactive 2D World Simulation Sandbox & Civilization Engine)
+ *     - React 19, TypeScript 5.8, HTML5 Canvas, Procedural Generation
+ *     - Procedural continents, cellular automata, kingdom diplomacy & god powers
+ *     - Includes real 1672x941 game screenshot (world-menu-background.png)
+ *
+ * 03. Figmint (Local-First Vector Design & Interactive Prototyping Studio)
+ *     - React 19, TypeScript, HTML5 Canvas, Vector Geometry & Bezier Math
+ *     - Infinite canvas, layer tree, vector pen, Smart Animate, multi-format export
+ *
+ * 04. Luma (Emotional Rhythm & Mood Tracking App with Dynamic Aura Generator)
+ *     - Kotlin, Jetpack Compose, Room DB, Android Desktop Widgets, Canvas Shaders
+ *     - Includes real 1280x2856 mobile screenshot (build-luma-aura.png)
+ *
+ * Excluded per user instructions:
  * - Вкапибара (excluded)
  * - Multi-pulti (excluded)
  * - FocusLock (excluded)
- *
- * Preferred selection requested:
- * 1. FreeChat (Confirmed on GitHub: moii-dev/FreeChat)
- * 2. EverUs (Not found in public moii-dev GitHub; requires manual filling)
- * 3. Runa (Not found in public moii-dev GitHub; requires manual filling)
- * 4. Где мой носок? (Not found in public moii-dev GitHub; requires manual filling)
- *
- * Per instruction:
- * "Если какой-либо проект отсутствует, найди другой подходящий реальный репозиторий из моего GitHub.
- *  Не выдумывай проекты, функциональность и технологии."
- *
- * Top 4 verified, production-ready GitHub repositories of moii-dev:
- * 01. FreeChat (Android / AI, Kotlin, Compose, Node.js, PostgreSQL)
- * 02. Luma / Pulse (Android / Lifestyle, Kotlin, Compose, Room DB, Widgets, Aura Export)
- * 03. QR-Scanner (Android / Utilities, Kotlin, CameraX, Google ML Kit, Room DB, v1.0.0)
- * 04. Figmint (Web / Design Tool, React, TypeScript, Infinite Canvas)
  */
 export const FEATURED_PROJECTS: Project[] = [
   {
     id: 'freechat',
     number: '01',
     title: 'FreeChat',
-    category: 'Android Application / AI',
-    description: 'Android AI chat client with Telegram/VK authentication, screen assistant, and Node.js/PostgreSQL backend.',
+    category: 'Android Application / AI Platform',
+    description: 'Android AI chat client with server-side AI routing, screen assistant, Telegram/VK auth, and Node.js/PostgreSQL backend.',
     longDescription:
-      'Чат с искусственным интеллектом для Android с авторизацией через Telegram/VK, историей чатов, инструментами для работы с изображениями и файлами, экранным помощником, общими чатами и бэкендом на Node.js/PostgreSQL. Разработан на Kotlin с использованием Jetpack Compose и современной архитектуры MVVM/Clean Architecture.',
+      'Полнофункциональный мобильный AI-ассистент для Android с серверной маршрутизацией запросов, экранным помощником, распознаванием изображений и документов, публичными ссылками на чаты и бэкендом на Node.js/PostgreSQL. Разработан на Kotlin с использованием Jetpack Compose, Material 3 и чистой архитектуры (MVVM / Clean Architecture).',
     tags: ['Kotlin', 'Jetpack Compose', 'Node.js', 'PostgreSQL'],
     githubUrl: 'https://github.com/moii-dev/FreeChat',
     stars: 2,
@@ -40,24 +43,72 @@ export const FEATURED_PROJECTS: Project[] = [
     featured: true,
     updatedAt: '2026-08-23',
     cover: {
-      variant: 'split',
+      variant: 'single',
       backgroundTheme: 'silver',
-      logoUrl: '/assets/projects/freechat/logo.png',
-      badgeText: 'Kotlin · Compose · v0.5.1 beta',
-      caption: 'Android AI chat client with screen assistant & streaming',
+      logoUrl: '/assets/projects/freechat/logo_transparent.png',
+      badgeText: 'Kotlin · Compose · Cloud Routing',
+      caption: 'Android AI chat client with screen assistant & neural streaming',
       altText: 'FreeChat Android AI Chat Application',
-      requiredScreenshots: ['freechat-chat-screen.png', 'freechat-drawer-menu.png'],
+    },
+  },
+  {
+    id: 'worldbox-react',
+    number: '02',
+    title: 'WorldBox-React',
+    category: 'Web Game / Simulation Engine',
+    description: 'Interactive 2D world & civilization sandbox simulator with procedural terrain, cellular automata climate, and autonomous kingdoms.',
+    longDescription:
+      'Комплексный симулятор цивилизаций и процедурной экосистемы на React 19, TypeScript и HTML5 Canvas. Включает процедурную генерацию континентов, островов и архипелагов с воспроизводимыми сидами, симуляцию климатических зон, автономное население (профессии, старение, семьи), эволюцию королевств, дипломатию, торговлю, войну и божественные силы с частицами.',
+    tags: ['React 19', 'TypeScript', 'HTML5 Canvas', 'Simulation Engine'],
+    githubUrl: 'https://github.com/moii-dev/WorldBox-React',
+    demoUrl: 'https://github.com/moii-dev/WorldBox-React',
+    stars: 0,
+    language: 'TypeScript',
+    featured: true,
+    updatedAt: '2026-09-22',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'slate',
+      primaryImage: '/assets/projects/worldbox/world-menu-background.png',
+      badgeText: 'React 19 · Canvas · Procedural Gen',
+      caption: 'Interactive 2D world sandbox simulator with procedural continent generation',
+      altText: 'WorldBox-React 2D World Simulation Sandbox',
+      objectFit: 'cover',
+    },
+  },
+  {
+    id: 'figmint',
+    number: '03',
+    title: 'Figmint',
+    category: 'Web App / Vector Design Studio',
+    description: 'Local-first vector design & interactive prototyping studio with infinite canvas, layer tree, vector pen, and Smart Animate.',
+    longDescription:
+      'Figma-подобный независимый локально-ориентированный векторный редактор на React и TypeScript. Бесконечный холст с панорамированием и плавным масштабированием, трансформация объектов, векторное перо с кривыми Безье, маски, булевы операции над фигурами, интерактивные связи прототипов со Smart Animate и экспорт в SVG/PNG/JSON.',
+    tags: ['TypeScript', 'React', 'HTML5 Canvas', 'Vector Math'],
+    githubUrl: 'https://github.com/moii-dev/Figmint',
+    demoUrl: 'https://github.com/moii-dev/Figmint',
+    stars: 0,
+    language: 'TypeScript',
+    featured: true,
+    updatedAt: '2026-08-25',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'silver',
+      logoUrl: '/assets/projects/figmint/logo.svg',
+      badgeText: 'React · Infinite Canvas · Prototyping',
+      caption: 'Local-first vector graphics editor and interactive prototyping tool',
+      altText: 'Figmint Vector Canvas Editor',
     },
   },
   {
     id: 'luma',
-    number: '02',
+    number: '04',
     title: 'Luma',
     category: 'Android / Lifestyle & Wellness',
-    description: 'Personal mood tracking & emotional wellness app for Android with dynamic Aura visual generation, desktop widgets, and Room database.',
+    description: 'Android emotional rhythm & mood tracking app featuring dynamic Aura visualization generator, desktop widgets, and Room database.',
     longDescription:
-      'Luma (Pulse) — Android-приложение на Jetpack Compose для трекинга настроения и эмоционального ритма. Включает динамическую генерацию персональной ауры (Aura), интерактивные виджеты рабочего стола (Pulse Aura & Quick Mood), аналитику по месяцам, дневниковые заметки и локальную базу Room.',
-    tags: ['Kotlin', 'Jetpack Compose', 'Room DB', 'Canvas'],
+      'Luma (Pulse) — Android-приложение на Jetpack Compose для трекинга эмоционального состояния и ритма дня. Включает процедурную генерацию градиентной ауры (Pulse Aura) на базе Canvas, интерактивные виджеты рабочего стола для быстрого логирования, помесячную аналитику настроения и локальное хранилище Room.',
+    tags: ['Kotlin', 'Jetpack Compose', 'Room DB', 'Android Widgets'],
     githubUrl: 'https://github.com/moii-dev/Luma',
     stars: 0,
     language: 'Kotlin',
@@ -65,153 +116,73 @@ export const FEATURED_PROJECTS: Project[] = [
     updatedAt: '2026-09-12',
     cover: {
       variant: 'single',
-      backgroundTheme: 'gray',
+      backgroundTheme: 'warm-gray',
       primaryImage: '/assets/projects/luma/build-luma-aura.png',
       badgeText: 'Jetpack Compose · Room · Widgets',
-      caption: 'Pulse Aura visual tracking & desktop widgets',
+      caption: 'Personal emotional rhythm tracker with dynamic Aura generation',
       altText: 'Luma Pulse Aura Android App',
       objectFit: 'contain',
     },
   },
-  {
-    id: 'qr-scanner',
-    number: '03',
-    title: 'QR-Scanner',
-    category: 'Android / Camera & ML Kit',
-    description: 'High-performance QR & barcode scanner and generator for Android built with CameraX, Google ML Kit, and Room Database.',
-    longDescription:
-      'Современный сканер и генератор QR/штрихкодов для Android на Jetpack Compose, CameraX, Google ML Kit и Room Database. Поддерживает мгновенное распознавание, сохранение истории, экспорт и публикацию в RuStore.',
-    tags: ['Kotlin', 'Jetpack Compose', 'CameraX', 'ML Kit'],
-    githubUrl: 'https://github.com/moii-dev/QR-Scanner',
-    stars: 0,
-    language: 'Kotlin',
-    featured: true,
-    updatedAt: '2026-08-23',
-    cover: {
-      variant: 'editorial',
-      backgroundTheme: 'neutral',
-      logoUrl: '/assets/projects/qr-scanner/app_icon.png',
-      badgeText: 'CameraX · ML Kit · v1.0.0',
-      caption: 'Real-time CameraX detection and barcode engine',
-      altText: 'QR-Scanner Android App',
-    },
-  },
-  {
-    id: 'figmint',
-    number: '04',
-    title: 'Figmint',
-    category: 'Web App / Design Tool',
-    description: 'Figma-like local-first vector graphics and canvas editor with infinite canvas, layer tree, hotkeys, and multi-format export.',
-    longDescription:
-      'Figma-подобный независимый векторный редактор с бесконечным холстом, масштабированием, слоями, векторными фигурами, горячими клавишами и экспортом в SVG/PNG. Разработан на React, TypeScript и HTML5 Canvas.',
-    tags: ['TypeScript', 'React', 'Canvas', 'UI/UX'],
-    githubUrl: 'https://github.com/moii-dev/Figmint',
-    stars: 0,
-    language: 'TypeScript',
-    featured: true,
-    updatedAt: '2026-08-25',
-    cover: {
-      variant: 'browser',
-      backgroundTheme: 'silver',
-      browserUrl: 'https://figmint.web.app',
-      badgeText: 'React · Canvas Editor',
-      caption: 'Local-first infinite canvas vector editor',
-      altText: 'Figmint Vector Canvas Editor',
-    },
-  },
 ];
 
 /**
- * Projects from the user's preferred draft that are NOT currently in public GitHub.
- * Kept ready with explicit tags indicating they require manual data filling.
- */
-export const DRAFT_REQUESTED_PROJECTS: Project[] = [
-  {
-    id: 'everus',
-    number: '02',
-    title: 'EverUs',
-    category: 'Android / Lifestyle (Draft)',
-    description: 'A personal space for meaningful moments, memories and shared experiences. (Repository pending public push)',
-    longDescription:
-      'Личное приложение для пар и близких людей. Включает счетчик совместных дней, галерею воспоминаний, виджеты и приватный дизайн. Внимание: публичный репозиторий на GitHub moii-dev пока отсутствует. Требуется ручное указание репозитория и скриншотов.',
-    tags: ['Kotlin', 'Jetpack Compose', 'Pending Repo'],
-    githubUrl: 'https://github.com/moii-dev',
-    stars: 0,
-    language: 'Kotlin',
-    featured: false,
-    updatedAt: '2026-06-10',
-    cover: {
-      variant: 'editorial',
-      backgroundTheme: 'warm-gray',
-      badgeText: 'В разработке · Репозиторий не найден',
-      caption: 'Личное пространство для двоих (требует ручного заполнения)',
-      fallbackNotice: 'Публичный репозиторий moii-dev/EverUs не найден на GitHub.',
-      requiredScreenshots: ['everus-counter.png', 'everus-memories.png'],
-    },
-  },
-  {
-    id: 'runa',
-    number: '03',
-    title: 'Runa',
-    category: 'Project / Creative (Draft)',
-    description: 'Проект из предпочтительной подборки Evgeny.dev. Публичный репозиторий на GitHub moii-dev отсутствует.',
-    longDescription:
-      'Проект Runa указан в предпочтительной подборке портфолио. В настоящее время публичный репозиторий moii-dev/Runa не найден на GitHub (возможно, проект опубликован под именем Luma с Aura-анимациями или находится в приватном статусе). Требуется ручное заполнение репозитория и данных.',
-    tags: ['In Development', 'Pending Repo'],
-    githubUrl: 'https://github.com/moii-dev',
-    stars: 0,
-    language: 'Kotlin',
-    featured: false,
-    updatedAt: '2026-10-14',
-    cover: {
-      variant: 'editorial',
-      backgroundTheme: 'slate',
-      badgeText: 'В разработке · Репозиторий не найден',
-      caption: 'Проект Runa (требует ручного заполнения репозитория)',
-      fallbackNotice: 'Публичный репозиторий moii-dev/Runa не найден на GitHub.',
-      requiredScreenshots: ['runa-preview.png'],
-    },
-  },
-  {
-    id: 'gde-moy-nosok',
-    number: '04',
-    title: 'Где мой носок?',
-    category: 'Game / Application (Draft)',
-    description: 'Проект из предпочтительной подборки Evgeny.dev. Публичный репозиторий на GitHub moii-dev отсутствует.',
-    longDescription:
-      'Проект «Где мой носок?» указан в предпочтительной подборке. В настоящее время публичный репозиторий на GitHub moii-dev отсутствует. Во избежание выдумывания несуществующих технологий проект помечен как драфт, ожидающий ссылки на репозиторий и описания.',
-    tags: ['In Development', 'Pending Repo'],
-    githubUrl: 'https://github.com/moii-dev',
-    stars: 0,
-    language: 'Code',
-    featured: false,
-    updatedAt: '2026-10-14',
-    cover: {
-      variant: 'editorial',
-      backgroundTheme: 'neutral',
-      badgeText: 'В разработке · Репозиторий не найден',
-      caption: 'Проект «Где мой носок?» (требует ручного заполнения)',
-      fallbackNotice: 'Публичный репозиторий не найден на GitHub.',
-      requiredScreenshots: ['nosok-preview.png'],
-    },
-  },
-];
-
-/**
- * All local projects including other confirmed repositories and excluded ones.
+ * All local projects representing the full public catalog of moii-dev.
  */
 export const ALL_LOCAL_PROJECTS: Project[] = [
   ...FEATURED_PROJECTS,
-  ...DRAFT_REQUESTED_PROJECTS,
+  {
+    id: 'onepass',
+    number: '05',
+    title: 'OnePass',
+    category: 'Extension / Security',
+    description: 'Local TOTP/HOTP two-factor authenticator for Chromium browsers with client-side Web Crypto AES-GCM encryption and PIN.',
+    longDescription:
+      'Локальный TOTP/HOTP-аутентификатор для Chromium-браузеров с аппаратным шифрованием Web Crypto API (AES-GCM, PBKDF2), распознаванием QR-кодов с экрана или буфера, PIN-защитой и резервным копированием.',
+    tags: ['JavaScript', 'Web Crypto', 'TOTP', 'Security'],
+    githubUrl: 'https://github.com/moii-dev/OnePass',
+    stars: 0,
+    language: 'JavaScript',
+    featured: false,
+    updatedAt: '2026-08-23',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'silver',
+      logoUrl: '/assets/projects/onepass/icon128.png',
+      badgeText: 'TOTP 2FA Authenticator',
+      caption: 'Local encrypted browser authenticator',
+    },
+  },
+  {
+    id: 'voroboff-bank',
+    number: '06',
+    title: 'VorobOFF-Bank',
+    category: 'Web App / Interactive Game',
+    description: 'Mobile banking clicker game in React 19 featuring balance management, upgrade store, transfers, and wheel of fortune.',
+    longDescription:
+      'Интерактивное веб-приложение в формате мобильного банковского интерфейса на React 19, TypeScript, Vite 6 и Tailwind CSS. Включает кликер-механики, магазин улучшений, финансовые переводы контактам, историю транзакций и мини-игру с колесом удачи.',
+    tags: ['React 19', 'TypeScript', 'Tailwind CSS', 'Motion'],
+    githubUrl: 'https://github.com/moii-dev/VorobOFF-Bank',
+    stars: 0,
+    language: 'TypeScript',
+    featured: false,
+    updatedAt: '2026-09-08',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'slate',
+      badgeText: 'React 19 · Motion · Tailwind',
+      caption: 'Mobile banking simulator & clicker interface',
+    },
+  },
   {
     id: 'yandex-adblocker',
-    number: '05',
+    number: '07',
     title: 'Yandex Search AdBlocker',
     category: 'Extension / Utility',
     description: 'Lightweight browser extension filtering sponsored ad units from Yandex search results.',
     longDescription:
-      'Yandex Search AdBlocker — легкое браузерное расширение, которое скрывает рекламные блоки в поисковой выдаче Яндекса. Реализовано на JavaScript Manifest V3 с DOM API.',
-    tags: ['JavaScript', 'Extensions', 'CSS', 'DOM API'],
+      'Yandex Search AdBlocker — легкое браузерное расширение Manifest V3, которое скрывает рекламные блоки в поисковой выдаче Яндекса. Реализовано на JavaScript с DOM API.',
+    tags: ['JavaScript', 'Chrome MV3', 'DOM API'],
     githubUrl: 'https://github.com/moii-dev/Yandex-AdBlocker',
     stars: 4,
     language: 'JavaScript',
@@ -226,56 +197,79 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     },
   },
   {
-    id: 'onepass',
-    number: '06',
-    title: 'OnePass',
-    category: 'Extension / Security',
-    description: 'Local TOTP/HOTP two-factor authenticator for Chromium browsers with encrypted storage and PIN.',
+    id: 'qr-scanner',
+    number: '08',
+    title: 'QR-Scanner',
+    category: 'Android / Camera & ML Kit',
+    description: 'High-performance QR & barcode scanner and generator for Android built with CameraX, Google ML Kit, and Room Database.',
     longDescription:
-      'Локальный TOTP/HOTP-аутентификатор для Chromium-браузеров с импортом QR-кодов, шифрованием, PIN-защитой и резервным копированием.',
-    tags: ['JavaScript', 'Cryptography', 'TOTP', 'Security'],
-    githubUrl: 'https://github.com/moii-dev/OnePass',
+      'Сканер и генератор QR/штрихкодов для Android на Jetpack Compose, CameraX, Google ML Kit и Room Database. Поддерживает мгновенное распознавание, сохранение истории и экспорт.',
+    tags: ['Kotlin', 'Jetpack Compose', 'CameraX', 'ML Kit'],
+    githubUrl: 'https://github.com/moii-dev/QR-Scanner',
     stars: 0,
-    language: 'JavaScript',
+    language: 'Kotlin',
     featured: false,
     updatedAt: '2026-08-23',
     cover: {
-      variant: 'browser',
-      backgroundTheme: 'silver',
-      logoUrl: '/assets/projects/onepass/icon128.png',
-      badgeText: 'TOTP 2FA Authenticator',
-      caption: 'Local encrypted browser authenticator',
+      variant: 'single',
+      backgroundTheme: 'neutral',
+      logoUrl: '/assets/projects/qr-scanner/app_icon.png',
+      badgeText: 'CameraX · ML Kit · Room DB',
+      caption: 'Real-time CameraX detection and barcode engine',
     },
   },
   {
-    id: 'worldbox-react',
-    number: '07',
-    title: 'WorldBox-React',
-    category: 'Web Game / Simulation',
-    description: '2D sandbox simulation game on React inspired by WorldBox with cellular automaton physics.',
+    id: 'gamma-cleaner',
+    number: '09',
+    title: 'PPTX / PDF Watermark Cleaner',
+    category: 'Desktop Tool / Document Processing',
+    description: 'Windows utility (.NET & Python PyMuPDF) for removing Gamma presentation watermarks from PowerPoint and PDF files.',
     longDescription:
-      '2D sandbox-игра на React в духе WorldBox с моделированием стихий, биомов и существ. Разработана на React 19, TypeScript и HTML5 Canvas.',
-    tags: ['React', 'TypeScript', 'Game Engine', 'Canvas'],
-    githubUrl: 'https://github.com/moii-dev/WorldBox-React',
+      'Десктопная утилита для Windows на .NET Framework и Python PyMuPDF, очищающая водяные знаки Gamma из презентаций PowerPoint (Open XML) и документов PDF.',
+    tags: ['C#', '.NET', 'Python', 'PyMuPDF'],
+    githubUrl: 'https://github.com/moii-dev/GAMMA-PPTX-Watermark-Cleaner',
     stars: 0,
-    language: 'TypeScript',
+    language: 'C#',
     featured: false,
-    updatedAt: '2026-09-22',
+    updatedAt: '2026-08-15',
     cover: {
       variant: 'single',
-      backgroundTheme: 'slate',
-      badgeText: 'React · Cellular Automata',
-      caption: 'Interactive world sandbox simulator',
+      backgroundTheme: 'neutral',
+      logoUrl: '/assets/projects/gamma-cleaner/app_logo.png',
+      badgeText: '.NET · Python · OpenXML',
+      caption: 'PPTX & PDF document watermark cleaner',
+    },
+  },
+  {
+    id: 'block-yandex-game',
+    number: '10',
+    title: 'Block Yandex Games',
+    category: 'Extension / Productivity',
+    description: 'DeclarativeNetRequest Chrome Manifest V3 extension blocking Yandex games navigation.',
+    longDescription:
+      'Легкое расширение Manifest V3 для Chromium-браузеров, блокирующее переходы на страницы Яндекс Игр с нулевыми накладными расходами памяти.',
+    tags: ['JavaScript', 'Manifest V3', 'DeclarativeNetRequest'],
+    githubUrl: 'https://github.com/moii-dev/Block-Yandex-Game',
+    stars: 0,
+    language: 'JavaScript',
+    featured: false,
+    updatedAt: '2026-08-10',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'neutral',
+      primaryImage: '/assets/projects/block-yandex-game/logo.png',
+      badgeText: 'Chrome MV3 · declarativeNetRequest',
+      caption: 'Lightweight web navigation filter',
     },
   },
   {
     id: 'codex-skills',
-    number: '08',
+    number: '11',
     title: 'Codex Skills',
     category: 'Developer Tools / CLI',
-    description: 'Curated workflow skills and execution modules for Codex AI agent developer environment.',
+    description: 'Curated developer workflow skills and execution modules for Codex AI agent environment.',
     longDescription:
-      'Скиллы для Codex для безопасного выполнения задач, внесения изменений в проект и улучшения пользовательского интерфейса.',
+      'Коллекция модулей и скиллов для Codex AI для безопасного выполнения инженерных задач, структурирования изменений и проектирования интерфейсов.',
     tags: ['CLI', 'Automation', 'Workflow', 'Developer Experience'],
     githubUrl: 'https://github.com/moii-dev/codex-skills',
     stars: 3,
@@ -283,17 +277,18 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     featured: false,
     updatedAt: '2026-09-04',
     cover: {
-      variant: 'editorial',
+      variant: 'single',
       backgroundTheme: 'gray',
       badgeText: 'Developer Experience · CLI',
       caption: 'Agent modules for terminal workflows',
     },
   },
+  // Explicitly excluded from featured per prompt:
   {
     id: 'focuslock',
-    number: '09',
+    number: '12',
     title: 'FocusLock',
-    category: 'Browser Extension / Productivity',
+    category: 'Extension / Productivity',
     description: 'Chrome extension for managing Page Visibility and focus signals. (Excluded from featured)',
     longDescription:
       'Расширение Chrome Manifest V3 для управления сигналами видимости и фокуса на выбранных сайтах.',
@@ -304,7 +299,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     featured: false,
     updatedAt: '2026-10-02',
     cover: {
-      variant: 'browser',
+      variant: 'single',
       backgroundTheme: 'slate',
       logoUrl: '/assets/projects/focuslock/icon128.png',
       badgeText: 'Chrome MV3 · StayActive',
@@ -313,7 +308,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
   },
   {
     id: 'multipulti',
-    number: '10',
+    number: '13',
     title: 'MultiPulti',
     category: 'Web Tool / Animation',
     description: 'Web editor for digital drawing and frame-by-frame 2D animation in browser. (Excluded from featured)',
@@ -335,13 +330,13 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
   },
   {
     id: 'vkapibara',
-    number: '11',
+    number: '14',
     title: 'Вкапибара',
     category: 'Android / Customization',
-    description: 'Custom social client for Android with dark theme and media management. (Excluded from featured)',
+    description: 'Custom social client for Android with dark theme. (Excluded from featured)',
     longDescription:
       'Кастомизированный мобильный клиент для социальной сети с упором на эстетичную темную тему.',
-    tags: ['Android', 'Java', 'Kotlin', 'UI/UX'],
+    tags: ['Android', 'Java', 'Kotlin'],
     githubUrl: 'https://github.com/moii-dev',
     stars: 1,
     language: 'Kotlin',
