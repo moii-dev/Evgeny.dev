@@ -5,7 +5,6 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import Lenis from 'lenis';
 import { NAVIGATION_SECTIONS, NavigationSection } from '../config/navigationSections';
 import { computePathGeometry, PathGeometry } from '../utils/motionPathGeometry';
-import { measureWordLayout } from '../utils/splitCharacters';
 import { ScrollProgressRulerHandle } from '../components/scroll-navigation/ScrollProgressRuler';
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
@@ -45,14 +44,10 @@ export function useScrollNavigation(
 
   const [activeSection, setActiveSection] = useState<NavigationSection>(NAVIGATION_SECTIONS[0]);
   const [visitedIds, setVisitedIds] = useState<string[]>([]);
-  const [upcomingIds, setUpcomingIds] = useState<string[]>(
-    NAVIGATION_SECTIONS.slice(1).map((s) => s.id)
-  );
+  const [nextSection, setNextSection] = useState<NavigationSection | null>(NAVIGATION_SECTIONS[1]);
   const [debugMode, setDebugMode] = useState(false);
 
   const activeSectionRef = useRef<NavigationSection>(NAVIGATION_SECTIONS[0]);
-  const visitedIdsRef = useRef<string[]>([]);
-  const upcomingIdsRef = useRef<string[]>(NAVIGATION_SECTIONS.slice(1).map((s) => s.id));
 
   useEffect(() => {
     const handleResize = () => {
@@ -102,9 +97,6 @@ export function useScrollNavigation(
       const pathEl = pathRef.current;
       if (!pathEl) return;
 
-      const pathLength = pathEl.getTotalLength();
-      if (pathLength === 0) return;
-
       const masterTl = gsap.timeline({
         paused: true,
         defaults: { ease: 'none' },
@@ -128,7 +120,7 @@ export function useScrollNavigation(
 
         const prevSec = NAVIGATION_SECTIONS[idx - 1];
         const targetProgress = sectionProgress[idx] || (idx / 4);
-        const startTransit = Math.max(0, targetProgress - 0.12);
+        const startTransit = Math.max(0, targetProgress - 0.10);
         const transitDuration = targetProgress - startTransit;
 
         const transitChars = document.querySelectorAll(
@@ -140,19 +132,12 @@ export function useScrollNavigation(
         const activeHeaderCur = document.querySelector(
           `[data-active-header="${sec.id}"]`
         );
-        const queueItemCur = document.querySelector(
-          `[data-queue-item="${sec.id}"]`
+        const nextLabelCur = document.querySelector(
+          `[data-next-label="${sec.id}"]`
         );
-        const visitedItemPrev = document.querySelector(
-          `[data-visited-item="${prevSec.id}"]`
-        );
-
-        const wordLayout = measureWordLayout(sec.label, 26);
-        const rightEdge = window.innerWidth - (window.innerWidth < 768 ? 40 : 80);
-        const activeStartX = rightEdge - wordLayout.totalWidth;
 
         if (activeHeaderCur) {
-          gsap.set(activeHeaderCur, { opacity: 0, y: 15, scale: 0.95 });
+          gsap.set(activeHeaderCur, { opacity: 0, y: 8 });
         }
 
         if (activeHeaderPrev) {
@@ -160,32 +145,18 @@ export function useScrollNavigation(
             activeHeaderPrev,
             {
               opacity: 0,
-              y: -20,
-              scale: 0.75,
-              duration: transitDuration * 0.45,
+              y: -8,
+              duration: transitDuration * 0.35,
             },
             startTransit
           );
         }
 
-        if (visitedItemPrev) {
+        if (nextLabelCur) {
           masterTl.to(
-            visitedItemPrev,
-            {
-              opacity: 0.65,
-              y: 0,
-              duration: transitDuration * 0.4,
-            },
-            startTransit + transitDuration * 0.2
-          );
-        }
-
-        if (queueItemCur) {
-          masterTl.to(
-            queueItemCur,
+            nextLabelCur,
             {
               opacity: 0,
-              x: 10,
               duration: transitDuration * 0.25,
             },
             startTransit
@@ -193,9 +164,9 @@ export function useScrollNavigation(
         }
 
         transitChars.forEach((charEl, cIdx) => {
-          const charOffset = wordLayout.offsets[cIdx] || cIdx * 14;
-          const staggerDelay = (cIdx / Math.max(1, transitChars.length)) * (transitDuration * 0.35);
-          const charStart = startTransit + staggerDelay;
+          const charCount = Math.max(1, transitChars.length);
+          const stagger = (cIdx / charCount) * (transitDuration * 0.3);
+          const charStart = startTransit + stagger;
           const charDuration = transitDuration * 0.65;
 
           masterTl.to(
@@ -227,7 +198,6 @@ export function useScrollNavigation(
             charEl,
             {
               rotation: 0,
-              x: activeStartX + charOffset,
               duration: charDuration * 0.3,
             },
             charStart + charDuration * 0.7
@@ -249,10 +219,9 @@ export function useScrollNavigation(
             {
               opacity: 1,
               y: 0,
-              scale: 1,
-              duration: transitDuration * 0.25,
+              duration: transitDuration * 0.3,
             },
-            startTransit + transitDuration * 0.75
+            startTransit + transitDuration * 0.7
           );
         }
       });
@@ -261,7 +230,7 @@ export function useScrollNavigation(
         trigger: document.body,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 0.6,
+        scrub: 0.5,
         animation: masterTl,
         onUpdate: (self) => {
           const progress = self.progress;
@@ -274,7 +243,7 @@ export function useScrollNavigation(
           let currentIdx = 0;
           for (let i = total - 1; i >= 0; i--) {
             const threshold = sectionProgress[i] || (i / (total - 1));
-            if (progress >= threshold - 0.05) {
+            if (progress >= threshold - 0.04) {
               currentIdx = i;
               break;
             }
@@ -286,12 +255,10 @@ export function useScrollNavigation(
             setActiveSection(curSec);
 
             const visited = NAVIGATION_SECTIONS.slice(0, currentIdx).map((s) => s.id);
-            const upcoming = NAVIGATION_SECTIONS.slice(currentIdx + 1).map((s) => s.id);
-
-            visitedIdsRef.current = visited;
-            upcomingIdsRef.current = upcoming;
             setVisitedIds(visited);
-            setUpcomingIds(upcoming);
+
+            const next = currentIdx < total - 1 ? NAVIGATION_SECTIONS[currentIdx + 1] : null;
+            setNextSection(next);
           }
         },
       });
@@ -322,7 +289,7 @@ export function useScrollNavigation(
     geometry,
     activeSection,
     visitedIds,
-    upcomingIds,
+    nextSection,
     debugMode,
     toggleDebug,
     scrollToSection,

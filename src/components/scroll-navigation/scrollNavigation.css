@@ -1,5 +1,3 @@
-/* Scroll Navigation HUD Styling */
-
 .hud-overlay {
   position: fixed;
   inset: 0;
@@ -11,13 +9,34 @@
   pointer-events: auto;
 }
 
-/* Character styling during transit and docking */
-.hud-char {
-  display: inline-block;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform-origin: center center;
-  user-select: none;
+.hud-panel {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.hud-active-slot {
+  margin-bottom: 12px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: auto;
+}
+
+.hud-next-slot {
+  margin-top: 12px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: auto;
 }
 
 .hud-char-transit {
@@ -26,63 +45,35 @@
   top: 0;
   pointer-events: none;
   z-index: 52;
-  font-family: var(--font-serif);
-  font-weight: 400;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.02em;
   color: #111111;
-  letter-spacing: 0.04em;
   transform-origin: center center;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  user-select: none;
 }
 
-/* Ruler styling */
-.hud-ruler-track {
-  width: 1px;
-  background-color: rgba(0, 0, 0, 0.10);
-  position: relative;
-}
-
-.hud-ruler-needle {
-  position: absolute;
-  left: -6px;
-  width: 12px;
-  height: 1.5px;
-  background-color: #111111;
-  pointer-events: none;
-  will-change: transform;
-}
-
-/* Visited stack items */
-.hud-visited-item {
-  transition: color 150ms ease, opacity 150ms ease;
-}
-
-.hud-visited-item:hover {
-  color: #111111;
-  opacity: 1;
-}
-
-/* Bottom Queue item */
-.hud-queue-item {
-  transition: transform 150ms ease, color 150ms ease, opacity 150ms ease;
-}
-
-.hud-queue-item:hover {
-  color: #111111;
-  transform: translateX(-3px);
-}
-
-/* Debug SVG overlay */
 .hud-debug-path {
-  stroke: rgba(17, 17, 17, 0.75);
+  stroke: rgba(17, 17, 17, 0.7);
   stroke-width: 1.5px;
-  stroke-dasharray: 4 4;
+  stroke-dasharray: 3 3;
   fill: none;
 }
 
 .hud-debug-handle {
-  stroke: rgba(17, 17, 17, 0.25);
+  stroke: rgba(17, 17, 17, 0.2);
   stroke-width: 1px;
 }
 
 .hud-debug-point {
   fill: #111111;
+}
+
+@media (max-width: 767px) {
+  .hud-panel {
+    right: 10px;
+  }
 }
