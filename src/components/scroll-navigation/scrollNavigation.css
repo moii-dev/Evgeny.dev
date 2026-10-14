@@ -1,0 +1,88 @@
+/* Scroll Navigation HUD Styling */
+
+.hud-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.hud-interactive {
+  pointer-events: auto;
+}
+
+/* Character styling during transit and docking */
+.hud-char {
+  display: inline-block;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-origin: center center;
+  user-select: none;
+}
+
+.hud-char-transit {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 52;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: #111111;
+  letter-spacing: 0.04em;
+  transform-origin: center center;
+}
+
+/* Ruler styling */
+.hud-ruler-track {
+  width: 1px;
+  background-color: rgba(0, 0, 0, 0.10);
+  position: relative;
+}
+
+.hud-ruler-needle {
+  position: absolute;
+  left: -6px;
+  width: 12px;
+  height: 1.5px;
+  background-color: #111111;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* Visited stack items */
+.hud-visited-item {
+  transition: color 150ms ease, opacity 150ms ease;
+}
+
+.hud-visited-item:hover {
+  color: #111111;
+  opacity: 1;
+}
+
+/* Bottom Queue item */
+.hud-queue-item {
+  transition: transform 150ms ease, color 150ms ease, opacity 150ms ease;
+}
+
+.hud-queue-item:hover {
+  color: #111111;
+  transform: translateX(-3px);
+}
+
+/* Debug SVG overlay */
+.hud-debug-path {
+  stroke: rgba(17, 17, 17, 0.75);
+  stroke-width: 1.5px;
+  stroke-dasharray: 4 4;
+  fill: none;
+}
+
+.hud-debug-handle {
+  stroke: rgba(17, 17, 17, 0.25);
+  stroke-width: 1px;
+}
+
+.hud-debug-point {
+  fill: #111111;
+}
