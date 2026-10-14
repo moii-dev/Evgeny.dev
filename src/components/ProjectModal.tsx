@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react';
-import { X, ExternalLink, Star, GitFork, Calendar, Code2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, ExternalLink, Star, GitFork, Calendar, Code2, Upload, RotateCcw, Image as ImageIcon } from 'lucide-react';
 import { Project } from '../types/project';
-import { FreeChatMockup } from './mockups/FreeChatMockup';
-import { VkapibaraMockup } from './mockups/VkapibaraMockup';
-import { EverUsMockup } from './mockups/EverUsMockup';
-import { FocusLockMockup } from './mockups/FocusLockMockup';
-import { GenericProjectMockup } from './mockups/GenericProjectMockup';
+import { ProjectCover } from './ProjectCover';
 
 interface Props {
   project: Project | null;
@@ -13,6 +9,20 @@ interface Props {
 }
 
 export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
+  const [customScreenshot, setCustomScreenshot] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    if (project) {
+      try {
+        const saved = localStorage.getItem(`evgeny_project_cover_${project.id}`);
+        setCustomScreenshot(saved || null);
+      } catch {
+        // ignore
+      }
+    }
+  }, [project]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -29,18 +39,30 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
 
   if (!project) return null;
 
-  const renderMockup = () => {
-    switch (project.mockupType) {
-      case 'freechat':
-        return <FreeChatMockup />;
-      case 'vkapibara':
-        return <VkapibaraMockup />;
-      case 'everus':
-        return <EverUsMockup />;
-      case 'focuslock':
-        return <FocusLockMockup />;
-      default:
-        return <GenericProjectMockup project={project} />;
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setCustomScreenshot(reader.result);
+          try {
+            localStorage.setItem(`evgeny_project_cover_${project.id}`, reader.result);
+          } catch {
+            // ignore
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleResetScreenshot = () => {
+    setCustomScreenshot(null);
+    try {
+      localStorage.removeItem(`evgeny_project_cover_${project.id}`);
+    } catch {
+      // ignore
     }
   };
 
@@ -57,9 +79,36 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
         </button>
 
         <div>
-          {/* Mockup Banner */}
-          <div className="w-full rounded-[20px] sm:rounded-[24px] overflow-hidden bg-neutral-950 mb-6 shadow-inner">
-            {renderMockup()}
+          {/* Cover Banner */}
+          <div className="relative w-full rounded-[20px] sm:rounded-[24px] overflow-hidden border border-neutral-200/80 bg-[#edf0f3] mb-6 shadow-2xs">
+            <ProjectCover
+              project={project}
+              size="modal"
+              customScreenshotUrl={customScreenshot || undefined}
+            />
+
+            {/* In-app screenshot preview tester */}
+            <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-xl border border-neutral-200/80 text-[11px] font-mono shadow-2xs">
+              <label className="flex items-center gap-1 text-neutral-700 hover:text-black cursor-pointer font-medium">
+                <Upload size={12} />
+                <span>Загрузить скриншот</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+              </label>
+              {customScreenshot && (
+                <button
+                  onClick={handleResetScreenshot}
+                  title="Сбросить на оригинал"
+                  className="ml-1 text-neutral-400 hover:text-red-600 transition-colors"
+                >
+                  <RotateCcw size={11} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Meta & Title */}

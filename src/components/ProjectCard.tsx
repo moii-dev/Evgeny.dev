@@ -1,11 +1,7 @@
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Project } from '../types/project';
-import { FreeChatMockup } from './mockups/FreeChatMockup';
-import { VkapibaraMockup } from './mockups/VkapibaraMockup';
-import { EverUsMockup } from './mockups/EverUsMockup';
-import { FocusLockMockup } from './mockups/FocusLockMockup';
-import { GenericProjectMockup } from './mockups/GenericProjectMockup';
+import { ProjectCover } from './ProjectCover';
 
 interface Props {
   project: Project;
@@ -13,29 +9,14 @@ interface Props {
 }
 
 export const ProjectCard: React.FC<Props> = ({ project, onSelect }) => {
-  const renderMockup = () => {
-    switch (project.mockupType) {
-      case 'freechat':
-        return <FreeChatMockup />;
-      case 'vkapibara':
-        return <VkapibaraMockup />;
-      case 'everus':
-        return <EverUsMockup />;
-      case 'focuslock':
-        return <FocusLockMockup />;
-      default:
-        return <GenericProjectMockup project={project} />;
-    }
-  };
-
   return (
     <div
       onClick={() => onSelect(project)}
-      className="group relative bg-[#f6f6f6] rounded-[28px] sm:rounded-[32px] p-3 sm:p-4 border border-neutral-200/70 hover:border-neutral-300 transition-all duration-300 flex flex-col justify-between cursor-pointer hover:shadow-xl"
+      className="group relative bg-[#f6f6f6] rounded-[28px] sm:rounded-[32px] p-3 sm:p-4 border border-neutral-200/80 hover:border-neutral-300 transition-all duration-300 flex flex-col justify-between cursor-pointer hover:shadow-xl"
     >
-      {/* Top Preview Canvas with Smooth Hover Scale */}
-      <div className="relative w-full overflow-hidden rounded-[20px] sm:rounded-[24px] bg-[#121316] transition-transform duration-500 ease-out group-hover:scale-[1.01]">
-        {renderMockup()}
+      {/* Top Preview Canvas with Minimal Product Showcase */}
+      <div className="relative w-full overflow-hidden rounded-[20px] sm:rounded-[24px] border border-neutral-200/70 bg-[#eceef1] transition-all duration-500 ease-out">
+        <ProjectCover project={project} size="card" />
       </div>
 
       {/* Bottom Content Area matching Reference */}

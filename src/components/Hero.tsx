@@ -103,9 +103,6 @@ export const Hero: React.FC<Props> = ({
               }`}
             />
 
-            {/* Gradient shadow overlay for badge readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-
             {/* Subtle "Change Photo / Заменить фото" customizer button */}
             <button
               onClick={onOpenPhotoChange}
@@ -115,32 +112,6 @@ export const Hero: React.FC<Props> = ({
               <Camera size={13} />
               <span>Change photo</span>
             </button>
-
-            {/* Floating Status Card matching Reference Image */}
-            <div className="relative z-20 m-4 sm:m-6 w-full max-w-[340px] bg-black/65 backdrop-blur-xl border border-white/15 rounded-2xl p-4 text-white shadow-2xl">
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex-1">
-                  <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-neutral-400 font-medium block mb-0.5">
-                    Current status
-                  </span>
-                  <h2 className="text-sm sm:text-base font-semibold text-white tracking-tight mb-1">
-                    Open to new projects
-                  </h2>
-                  <p className="text-[11px] text-neutral-300 leading-relaxed font-normal">
-                    Turning ambitious ideas into reliable digital experiences.
-                  </p>
-                </div>
-
-                <button
-                  onClick={onOpenContact}
-                  className="w-9 h-9 rounded-xl bg-white hover:bg-neutral-100 text-black flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105 shadow-md"
-                  aria-label="Contact Evgeny"
-                >
-                  <ArrowUpRight size={17} strokeWidth={2.5} />
-                </button>
-              </div>
-            </div>
-
           </div>
 
         </div>

@@ -1,3 +1,18 @@
+export interface ProjectCoverConfig {
+  variant: 'single' | 'split' | 'browser' | 'editorial' | 'placeholder';
+  backgroundTheme?: 'silver' | 'gray' | 'warm-gray' | 'slate' | 'neutral';
+  primaryImage?: string;
+  secondaryImage?: string;
+  logoUrl?: string;
+  badgeText?: string;
+  caption?: string;
+  altText?: string;
+  browserUrl?: string;
+  objectFit?: 'contain' | 'cover';
+  fallbackNotice?: string;
+  requiredScreenshots?: string[];
+}
+
 export interface Project {
   id: string;
   number: string; // e.g. "01", "02"
@@ -13,7 +28,8 @@ export interface Project {
   updatedAt?: string;
   featured: boolean;
   language?: string;
-  mockupType: 'freechat' | 'vkapibara' | 'everus' | 'focuslock' | 'generic';
+  cover?: ProjectCoverConfig;
+  mockupType?: 'freechat' | 'vkapibara' | 'everus' | 'focuslock' | 'generic';
 }
 
 export interface GitHubRepo {

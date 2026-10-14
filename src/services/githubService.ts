@@ -1,8 +1,8 @@
 import { GitHubRepo, Project } from '../types/project';
 import { ALL_LOCAL_PROJECTS, FEATURED_PROJECTS } from '../data/featuredProjects';
 
-const CACHE_KEY = 'evgeny_portfolio_github_repos_v1';
-const CACHE_TIMESTAMP_KEY = 'evgeny_portfolio_github_timestamp_v1';
+const CACHE_KEY = 'evgeny_portfolio_github_repos_v3';
+const CACHE_TIMESTAMP_KEY = 'evgeny_portfolio_github_timestamp_v3';
 const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
 
 export interface GitHubStats {
@@ -62,6 +62,7 @@ export async function fetchGitHubRepos(username = 'moii-dev', forceRefresh = fal
           githubUrl: repo.html_url,
           demoUrl: repo.homepage || localMatch.demoUrl,
           updatedAt: repo.updated_at.split('T')[0],
+          cover: localMatch.cover,
         };
       }
 
@@ -86,7 +87,12 @@ export async function fetchGitHubRepos(username = 'moii-dev', forceRefresh = fal
         updatedAt: repo.updated_at.split('T')[0],
         featured: false,
         language: repo.language || undefined,
-        mockupType: 'generic',
+        cover: {
+          variant: 'editorial',
+          backgroundTheme: 'silver',
+          badgeText: repo.language || 'Open Source',
+          caption: repo.description || 'GitHub Repository',
+        },
       };
     });
 
