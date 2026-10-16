@@ -1,3 +1,5 @@
+import { LanguageSwitcher } from './LanguageSwitcher';
+import { t } from '../i18n';
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { scrollToSection } from '../utils/scrollController';
@@ -82,12 +84,12 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
         </a>
 
         {/* Center Nav Links (Desktop) */}
-        <nav className="hidden md:flex items-center gap-8 text-[13px] font-medium text-neutral-600">
+        <nav className="hidden md:flex items-center gap-3 lg:gap-8 text-[13px] font-medium text-neutral-600">
           {navItems.map((item) => {
             const isActive = activeSection === item.href.replace('#', '');
             return (
               <a
-                key={item.label}
+                key={item.href}
                 href={item.href}
                 onClick={(e) => {
                   e.preventDefault();
@@ -97,7 +99,7 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
                   isActive ? 'text-black font-semibold' : ''
                 }`}
               >
-                {item.label}
+                {t(item.label)}
                 {isActive && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-black rounded-full transition-all" />
                 )}
@@ -107,28 +109,28 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
         </nav>
 
         {/* Right CTA Button */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2 lg:gap-3">
+          <LanguageSwitcher />
           <button
             onClick={onOpenContact}
             data-magnetic
             className="px-5 py-2 rounded-full bg-black hover:bg-neutral-800 text-white text-[13px] font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm flex items-center gap-1.5"
           >
-            <span>Let's talk</span>
+            <span>{t("Let's talk")}</span>
           </button>
         </div>
 
         {/* Mobile Menu Hamburger */}
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex md:hidden items-center gap-1">
+          <LanguageSwitcher />
           <button
             onClick={onOpenContact}
             className="px-3.5 py-1.5 rounded-full bg-black text-white text-xs font-medium"
-          >
-            Let's talk
-          </button>
+          >{t("Let's talk")}</button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-xl text-neutral-800 hover:bg-neutral-100 transition-colors"
-            aria-label="Toggle Navigation Menu"
+            aria-label={t("Toggle Navigation Menu")}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
           >
@@ -151,7 +153,7 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
                 }}
                 className="py-1 text-neutral-800 hover:text-black flex items-center justify-between"
               >
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
                 <ArrowUpRight size={14} className="text-neutral-400" />
               </a>
             ))}

@@ -1,3 +1,4 @@
+import en from '../i18n/locales/en.json';
 export interface NavigationSection {
   id: string;
   label: string;
@@ -10,42 +11,42 @@ export interface NavigationSection {
 export const NAVIGATION_SECTIONS: NavigationSection[] = [
   {
     id: 'home',
-    label: 'HOME',
-    shortLabel: 'HOME',
+    label: en["HOME"],
+    shortLabel: en["HOME"],
     index: '00',
     order: 0,
-    kicker: 'OVERVIEW',
+    kicker: en["OVERVIEW"],
   },
   {
     id: 'projects',
-    label: 'PROJECTS',
-    shortLabel: 'WORK',
+    label: en["PROJECTS"],
+    shortLabel: en["WORK"],
     index: '01',
     order: 1,
-    kicker: 'SELECTED WORK',
+    kicker: en["SELECTED WORK"],
   },
   {
     id: 'about',
-    label: 'ABOUT ME',
-    shortLabel: 'ABOUT',
+    label: en["ABOUT ME"],
+    shortLabel: en["ABOUT"],
     index: '02',
     order: 2,
-    kicker: 'PHILOSOPHY',
+    kicker: en["PHILOSOPHY"],
   },
   {
     id: 'stack',
-    label: 'TECH STACK',
-    shortLabel: 'STACK',
+    label: en["TECH STACK"],
+    shortLabel: en["STACK"],
     index: '03',
     order: 3,
-    kicker: 'CAPABILITIES',
+    kicker: en["CAPABILITIES"],
   },
   {
     id: 'contact',
-    label: 'CONTACT',
-    shortLabel: 'TALK',
+    label: en["CONTACT"],
+    shortLabel: en["TALK"],
     index: '04',
     order: 4,
-    kicker: 'GET IN TOUCH',
+    kicker: en["GET IN TOUCH"],
   },
 ];

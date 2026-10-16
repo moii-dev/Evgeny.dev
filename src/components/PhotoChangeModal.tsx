@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import React, { useState } from 'react';
 import { X, Upload, RotateCcw, Link as LinkIcon, Check } from 'lucide-react';
 import { Modal } from './Modal';
@@ -51,20 +52,18 @@ export const PhotoChangeModal: React.FC<Props> = ({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} label="Custom Portrait">
+    <Modal isOpen={isOpen} onClose={onClose} label={t("Custom Portrait")}>
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
       <div className="relative w-full max-w-md max-h-[calc(100dvh-2rem)] bg-white rounded-3xl shadow-2xl border border-neutral-200 overflow-y-auto overscroll-contain p-6 sm:p-7">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-neutral-100">
           <div>
-            <h3 className="text-lg font-semibold text-neutral-900">Custom Portrait</h3>
-            <p className="text-xs text-neutral-500 mt-0.5">
-              Personalize your developer photo on the hero section
-            </p>
+            <h3 className="text-lg font-semibold text-neutral-900">{t("Custom Portrait")}</h3>
+            <p className="text-xs text-neutral-500 mt-0.5">{t("Personalize your developer photo on the hero section")}</p>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close portrait editor"
+            aria-label={t("Close portrait editor")}
             className="w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-600 transition-colors"
           >
             <X size={16} />
@@ -76,15 +75,13 @@ export const PhotoChangeModal: React.FC<Props> = ({
           <div className="relative w-36 h-44 rounded-2xl overflow-hidden border-2 border-neutral-900 shadow-md bg-neutral-100">
             <img
               src={previewPhoto}
-              alt="Developer Portrait Preview"
+              alt={t("Developer Portrait Preview")}
               className={`w-full h-full object-cover transition-all ${
                 mono ? 'grayscale contrast-110 brightness-95' : ''
               }`}
             />
             {mono && (
-              <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-black/70 text-[9px] text-white rounded font-mono">
-                B&W
-              </span>
+              <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 bg-black/70 text-[9px] text-white rounded font-mono">{t("B&W")}</span>
             )}
           </div>
 
@@ -94,9 +91,7 @@ export const PhotoChangeModal: React.FC<Props> = ({
               checked={mono}
               onChange={(e) => setMono(e.target.checked)}
               className="rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
-            />
-            Apply editorial monochrome filter (B&W)
-          </label>
+            />{t("Apply editorial monochrome filter (B&W)")}</label>
         </div>
 
         {/* Options */}
@@ -110,9 +105,7 @@ export const PhotoChangeModal: React.FC<Props> = ({
                   ? 'border-neutral-900 bg-neutral-900 text-white'
                   : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100 text-neutral-700'
               }`}
-            >
-              Default Editorial
-            </button>
+            >{t("Default Editorial")}</button>
             <button
               onClick={() => { void upload.url(githubAvatar); }}
               className={`flex-1 py-2 px-3 text-xs font-medium rounded-xl border transition-colors ${
@@ -120,16 +113,14 @@ export const PhotoChangeModal: React.FC<Props> = ({
                   ? 'border-neutral-900 bg-neutral-900 text-white'
                   : 'border-neutral-200 bg-neutral-50 hover:bg-neutral-100 text-neutral-700'
               }`}
-            >
-              GitHub Avatar
-            </button>
+            >{t("GitHub Avatar")}</button>
           </div>
 
           {/* File Upload Button */}
           <div>
             <label className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl border border-dashed border-neutral-300 bg-neutral-50 hover:bg-neutral-100 cursor-pointer text-xs font-medium text-neutral-700 transition-colors">
               <Upload size={14} />
-              <span>Upload photo from your device</span>
+              <span>{t("Upload photo from your device")}</span>
               <input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" onChange={handleFileUpload} className="sr-only" />
             </label>
           </div>
@@ -139,8 +130,8 @@ export const PhotoChangeModal: React.FC<Props> = ({
             <div className="relative flex-1">
               <input
                 type="text"
-                aria-label="Image URL"
-                placeholder="Or paste image URL..."
+                aria-label={t("Image URL")}
+                placeholder={t("Or paste image URL...")}
                 value={inputUrl}
                 onChange={(e) => setInputUrl(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleApplyUrl()}
@@ -152,13 +143,11 @@ export const PhotoChangeModal: React.FC<Props> = ({
               onClick={handleApplyUrl}
               disabled={!inputUrl.trim()}
               className="px-3 py-2 bg-neutral-100 hover:bg-neutral-200 disabled:opacity-40 text-xs font-medium rounded-xl text-neutral-800 transition-colors"
-            >
-              Apply
-            </button>
+            >{t("Apply")}</button>
           </div>
         </div>
 
-        <p role="status" className="mt-3 text-xs text-neutral-600">{upload.busy ? 'Processing image…' : upload.error}</p>
+        <p role="status" className="mt-3 text-xs text-neutral-600">{t(upload.busy ? 'Processing image…' : upload.error)}</p>
 
         {/* Footer actions */}
         <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-between">
@@ -171,23 +160,21 @@ export const PhotoChangeModal: React.FC<Props> = ({
             className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-900 transition-colors"
           >
             <RotateCcw size={12} />
-            <span>Reset</span>
+            <span>{t("Reset")}</span>
           </button>
 
           <div className="flex gap-2">
             <button
               onClick={onClose}
               className="px-4 py-2 text-xs font-medium text-neutral-600 hover:bg-neutral-100 rounded-xl transition-colors"
-            >
-              Cancel
-            </button>
+            >{t("Cancel")}</button>
             <button
               onClick={handleSave}
               disabled={upload.busy}
               className="flex items-center gap-1.5 px-5 py-2 text-xs font-medium bg-neutral-900 hover:bg-black text-white rounded-xl shadow transition-colors"
             >
               <Check size={14} />
-              <span>Save & Apply</span>
+              <span>{t("Save & Apply")}</span>
             </button>
           </div>
         </div>

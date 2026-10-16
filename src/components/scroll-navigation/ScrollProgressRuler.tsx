@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { NAVIGATION_SECTIONS } from '../../config/navigationSections';
 
@@ -50,7 +51,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
     };
 
     return (
-      <div className="flex flex-col items-center select-none" aria-label="Section navigation rail">
+      <div className="flex flex-col items-center select-none" aria-label={t("Section navigation rail")}>
         <div
           ref={trackRef}
           onClick={handleTrackClick}
@@ -84,7 +85,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
                     onSelectSection(sec.id);
                   }}
                   className="relative p-1.5 flex items-center justify-center cursor-pointer transition-transform duration-150 hover:scale-125 focus:outline-none"
-                  aria-label={`Go to section ${sec.label}`}
+                  aria-label={t('Go to section {section}', { section: t(sec.label) })}
                   aria-current={isActive ? 'location' : undefined}
                 >
                   <span
@@ -95,7 +96,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
                   />
 
                   <span className="absolute right-6 opacity-0 group-hover/marker:opacity-100 pointer-events-none transition-all duration-150 translate-x-1 group-hover/marker:translate-x-0 whitespace-nowrap px-2 py-0.5 rounded bg-white/95 backdrop-blur-sm border border-neutral-200/90 shadow-2xs font-mono text-[10px] text-[#111111] z-30 font-medium">
-                    {sec.index}. {sec.label}
+                    {sec.index}. {t(sec.label)}
                   </span>
                 </button>
               </div>
@@ -107,7 +108,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
             className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-10 will-change-transform"
             style={{ transform: 'translateY(0px)' }}
           >
-            <div ref={progressRef} role="progressbar" aria-label="Page scroll progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={0} className="w-2.5 h-[1.5px] bg-[#111111] -translate-x-1/2 rounded-xs" />
+            <div ref={progressRef} role="progressbar" aria-label={t("Page scroll progress")} aria-valuemin={0} aria-valuemax={100} aria-valuenow={0} className="w-2.5 h-[1.5px] bg-[#111111] -translate-x-1/2 rounded-xs" />
           </div>
         </div>
 

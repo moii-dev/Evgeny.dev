@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { usePrefersReducedMotion as useReducedMotion } from '../hooks/usePrefersReducedMotion';
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
@@ -35,9 +36,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Right: Tagline */}
-          <p className="text-xs sm:text-sm text-neutral-500 font-normal">
-            Building digital experiences with purpose.
-          </p>
+          <p className="text-xs sm:text-sm text-neutral-500 font-normal">{t("Building digital experiences with purpose.")}</p>
         </div>
 
         {/* 2. Central Hero: Massive Decorative Typography EVGENY.DEV */}
@@ -84,12 +83,12 @@ export const Footer: React.FC = () => {
         <div className="pt-6 border-t border-neutral-200/80 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
           {/* Left: Copyright */}
           <div className="order-2 md:order-1 text-center md:text-left">
-            <span>© {currentYear} Evgeny.dev. All rights reserved.</span>
+            <span>© {currentYear}{" "}{t("Evgeny.dev. All rights reserved.")}</span>
           </div>
 
           {/* Center: Credits */}
           <div className="order-3 md:order-2 text-center">
-            <span>Designed &amp; developed by Evgeny.</span>
+            <span>{t("Designed & developed by Evgeny.")}</span>
           </div>
 
           {/* Right: Back to Top Button */}
@@ -97,9 +96,9 @@ export const Footer: React.FC = () => {
             <button
               onClick={scrollToTop}
               className="flex items-center gap-1.5 text-neutral-600 hover:text-black font-medium transition-colors group cursor-pointer"
-              aria-label="Back to top"
+              aria-label={t("Back to top")}
             >
-              <span>Back to top</span>
+              <span>{t("Back to top")}</span>
               <ArrowUp
                 size={14}
                 className="transition-transform duration-200 group-hover:-translate-y-1 text-neutral-500 group-hover:text-black"

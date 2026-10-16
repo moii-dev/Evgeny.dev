@@ -1,3 +1,4 @@
+import { useLocale } from '../i18n';
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 import gsap from 'gsap';
@@ -15,6 +16,7 @@ export function useScrollNavigation(
   rulerRef: RefObject<ScrollProgressRulerHandle | null>,
   pathRef: RefObject<SVGPathElement | null>
 ) {
+  const locale = useLocale();
   const [geometry, setGeometry] = useState(() => computePathGeometry(window.innerWidth, window.innerHeight));
   const [activeSection, setActiveSection] = useState(NAVIGATION_SECTIONS[0]);
   const [layoutVersion, setLayoutVersion] = useState(0);
@@ -105,7 +107,7 @@ export function useScrollNavigation(
       updateUI(progress);
     });
     return () => context.revert();
-  }, [geometry, layoutVersion, reducedMotion, pathRef, rulerRef]);
+  }, [geometry, layoutVersion, reducedMotion, pathRef, rulerRef, locale]);
 
   const activeIndex = NAVIGATION_SECTIONS.findIndex(section => section.id === activeSection.id);
   return { geometry, activeSection, visitedIds: NAVIGATION_SECTIONS.slice(0, activeIndex).map(section => section.id),

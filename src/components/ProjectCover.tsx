@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import React, { useState } from 'react';
 import { Project, ProjectCoverConfig } from '../types/project';
 import { assetUrl } from '../utils/urls';
@@ -36,7 +37,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
 
   if (customImage && !imageError) {
     return <div className={`relative w-full ${containerHeight} bg-gradient-to-br from-[#f5f6f8] via-[#eceef2] to-[#e2e5eb] flex items-center justify-center p-5 sm:p-7`}>
-      <img src={customImage} alt={`${project.title} custom cover`} onError={() => setFailedSource(customImage)} className="w-full max-h-[310px] object-contain rounded-2xl" />
+      <img src={customImage} alt={t('{title} custom cover', { title: project.title })} onError={() => setFailedSource(customImage)} className="w-full max-h-[310px] object-contain rounded-2xl" />
     </div>;
   }
 
@@ -71,7 +72,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/95 backdrop-blur-md border border-white/80 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.03)] flex items-center justify-center p-4 sm:p-5 mb-4">
             <img
               src={assetUrl('/assets/projects/freechat/logo_transparent.png')}
-              alt="FreeChat Brand Mark"
+              alt={t("FreeChat Brand Mark")}
               className="w-full h-full object-contain filter drop-shadow-xs"
               loading="lazy"
             />
@@ -81,9 +82,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 font-sans">
             FreeChat
           </h4>
-          <p className="text-xs sm:text-sm text-neutral-500 font-medium tracking-wide mt-1">
-            Intelligent AI Assistant & Platform
-          </p>
+          <p className="text-xs sm:text-sm text-neutral-500 font-medium tracking-wide mt-1">{t("Intelligent AI Assistant & Platform")}</p>
         </div>
 
         {/* Corner Badge */}
@@ -118,7 +117,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
               src={effectivePrimaryImage}
               srcSet={!customScreenshotUrl ? `${assetUrl('/assets/projects/worldbox/world-menu-background-480.webp')} 480w, ${assetUrl('/assets/projects/worldbox/world-menu-background-960.webp')} 960w, ${effectivePrimaryImage} 1672w` : undefined}
               sizes="(min-width: 768px) 480px, calc(100vw - 80px)"
-              alt="WorldBox-React Procedural Generation Screenshot"
+              alt={t("WorldBox-React Procedural Generation Screenshot")}
               loading="lazy"
               onError={() => setFailedSource(effectivePrimaryImage || null)}
               className="w-full max-h-[220px] sm:max-h-[255px] object-cover object-center"
@@ -127,9 +126,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
         </div>
 
         {/* Corner Badge */}
-        <div className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-neutral-200/80 text-[10px] sm:text-[11px] font-mono text-neutral-700 shadow-2xs">
-          React 19 · Simulation Engine
-        </div>
+        <div className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-neutral-200/80 text-[10px] sm:text-[11px] font-mono text-neutral-700 shadow-2xs">{t("React 19 · Simulation Engine")}</div>
       </div>
     );
   }
@@ -191,15 +188,11 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <h4 className="text-xl sm:text-2xl font-bold tracking-tight text-neutral-900 font-sans">
             Figmint
           </h4>
-          <p className="text-xs sm:text-sm text-neutral-500 font-medium tracking-wide mt-1">
-            Local-First Vector & Prototyping Studio
-          </p>
+          <p className="text-xs sm:text-sm text-neutral-500 font-medium tracking-wide mt-1">{t("Local-First Vector & Prototyping Studio")}</p>
         </div>
 
         {/* Corner Badge */}
-        <div className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-neutral-200/80 text-[10px] sm:text-[11px] font-mono text-neutral-700 shadow-2xs">
-          Canvas · Bezier · Prototyping
-        </div>
+        <div className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-neutral-200/80 text-[10px] sm:text-[11px] font-mono text-neutral-700 shadow-2xs">{t("Canvas · Bezier · Prototyping")}</div>
       </div>
     );
   }
@@ -226,7 +219,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <div className="relative max-h-[230px] sm:max-h-[265px] rounded-2xl overflow-hidden border border-neutral-300/80 shadow-[0_16px_40px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.03)] bg-white transition-all duration-500 ease-out group-hover:scale-[1.025] group-hover:shadow-[0_20px_48px_rgba(0,0,0,0.12)]">
             <img
               src={effectivePrimaryImage}
-              alt="Luma Pulse Aura Real Screenshot"
+              alt={t("Luma Pulse Aura Real Screenshot")}
               loading="lazy"
               onError={() => setFailedSource(effectivePrimaryImage || null)}
               className="w-full max-h-[230px] sm:max-h-[265px] object-contain"
@@ -278,7 +271,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
             {cover.logoUrl ? (
               <img
                 src={assetUrl(cover.logoUrl)}
-                alt={`${project.title} logo`}
+                alt={t('{title} logo', { title: project.title })}
                 className="w-full h-full object-contain"
                 loading="lazy"
               />
@@ -293,14 +286,14 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
             {project.title}
           </h4>
           <p className="text-xs text-neutral-500 font-medium mt-1">
-            {project.category}
+            {t(project.category)}
           </p>
         </div>
       )}
 
       {/* Minimal Corner Badge */}
       <div className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 z-10 px-3 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-neutral-200/80 text-[10px] sm:text-[11px] font-mono text-neutral-600 shadow-2xs">
-        {cover.badgeText || project.language || 'Production'}
+        {t(cover.badgeText || project.language || 'Production')}
       </div>
     </div>
   );

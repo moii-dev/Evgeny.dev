@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 import React, { useState } from 'react';
 
 /**
@@ -69,7 +70,7 @@ export const WorkspaceVisual: React.FC = () => {
       {!imgError ? (
         <img
           src={photoUrl}
-          alt="Monochrome Developer Workspace"
+          alt={t("Monochrome Developer Workspace")}
           onError={() => setImgError(true)}
           className="w-full h-full object-cover object-center grayscale contrast-115 brightness-95 transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           loading="lazy"
@@ -178,7 +179,7 @@ export const MountainVisual: React.FC<{ scrollOffset?: number }> = () => {
       {!imgError ? (
         <img
           src={photoUrl}
-          alt="Atmospheric Mountain Landscape"
+          alt={t("Atmospheric Mountain Landscape")}
           onError={() => setImgError(true)}
           className="w-full h-full object-cover object-right-bottom grayscale contrast-125 brightness-75 scale-105 transition-transform duration-1000 ease-out group-hover:scale-110"
           loading="lazy"
@@ -251,7 +252,7 @@ export const GearVisual: React.FC = () => {
       {!imgError ? (
         <img
           src={photoUrl}
-          alt="Creative Gear: Headphones, Camera, Notebook"
+          alt={t("Creative Gear: Headphones, Camera, Notebook")}
           onError={() => setImgError(true)}
           className="w-full h-full object-cover object-center grayscale contrast-120 brightness-90 transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           loading="lazy"

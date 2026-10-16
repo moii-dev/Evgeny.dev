@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { useEffect, useLayoutEffect, useRef, useState, useCallback, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
@@ -164,9 +165,7 @@ export const CustomCursor = () => {
         <span
           ref={labelRef}
           className="pointer-events-none select-none text-xs font-medium text-white opacity-0"
-        >
-          View
-        </span>
+        >{t("View")}</span>
       </div>
       <div
         ref={dotRef}

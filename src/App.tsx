@@ -1,3 +1,4 @@
+import { t, useLocale, formatDate } from './i18n';
 import { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -28,14 +29,15 @@ const GITHUB_AVATAR_URL = 'https://avatars.githubusercontent.com/u/140349762?v=4
 const DEFAULT_EMAIL = 'hnansaed71@gmail.com';
 
 export default function App() {
+  useLocale();
   const [projects, setProjects] = useState<Project[]>(ALL_LOCAL_PROJECTS);
   const [isLoading, setIsLoading] = useState(false);
   const [githubStatus, setGitHubStatus] = useState<GitHubResult | null>(null);
   const githubRequest = useRef<AbortController | null>(null);
   const fromCache = githubStatus?.source !== 'live';
-  const githubNotice = isLoading ? 'Syncing with GitHub…' : githubStatus
-    ? [githubStatus.error, githubStatus.warning, `Showing ${githubStatus.source === 'local' ? 'local projects' : githubStatus.source === 'cache' ? 'saved projects' : 'GitHub projects'}.`, githubStatus.lastUpdated ? `Last synced ${new Date(githubStatus.lastUpdated).toLocaleString()}.` : ''].filter(Boolean).join(' ')
-    : 'Showing local projects.';
+  const githubNotice = isLoading ? t('Syncing with GitHub…') : githubStatus
+    ? [t(githubStatus.error), t(githubStatus.warning), t('Showing {source}.', { source: t(githubStatus.source === 'local' ? 'local projects' : githubStatus.source === 'cache' ? 'saved projects' : 'GitHub projects') }), githubStatus.lastUpdated ? t('Last synced {date}.', { date: formatDate(githubStatus.lastUpdated, true) }) : ''].filter(Boolean).join(' ')
+    : t('Showing local projects.');
 
   // Modals state
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -82,12 +84,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fafaf9] text-[#111111] font-sans subtle-grain">
-      <FeatureBoundary label="Custom cursor"><CustomCursor /></FeatureBoundary>
-      <FeatureBoundary label="Section animation"><Suspense fallback={null}><ScrollNavigationHUD /></Suspense></FeatureBoundary>
+      <FeatureBoundary label={t("Custom cursor")}><CustomCursor /></FeatureBoundary>
+      <FeatureBoundary label={t("Section animation")}><Suspense fallback={null}><ScrollNavigationHUD /></Suspense></FeatureBoundary>
 
       {/* Header */}
       <Header onOpenContact={() => handleScrollTo('contact')} />
-      {storageWarning && <p role="status" className="fixed bottom-4 left-4 right-4 z-[80] max-w-lg rounded-xl border border-neutral-300 bg-white p-3 text-xs shadow-lg">{storageWarning}<button className="ml-3 underline" onClick={() => setStorageWarning('')}>Dismiss</button></p>}
+      {storageWarning && <p role="status" className="fixed bottom-4 left-4 right-4 z-[80] max-w-lg rounded-xl border border-neutral-300 bg-white p-3 text-xs shadow-lg">{t(storageWarning)}<button className="ml-3 underline" onClick={() => setStorageWarning('')}>{t("Dismiss")}</button></p>}
 
       {/* Main Content */}
       <main>
@@ -132,7 +134,7 @@ export default function App() {
       <Footer />
 
       {/* Project Detail Modal */}
-      {selectedProject && <FeatureBoundary label="Project details" onDismiss={() => setSelectedProject(null)}><Suspense fallback={<span className="sr-only" role="status">Loading dialog…</span>}><ProjectModal
+      {selectedProject && <FeatureBoundary label={t("Project details")} onDismiss={() => setSelectedProject(null)}><Suspense fallback={<span className="sr-only" role="status">{t("Loading dialog…")}</span>}><ProjectModal
         key={selectedProject?.id || 'closed'}
         project={selectedProject}
         customScreenshot={selectedProject ? covers[selectedProject.id] || null : null}
@@ -141,7 +143,7 @@ export default function App() {
       /></Suspense></FeatureBoundary>}
 
       {/* All Projects Modal */}
-      {catalogMounted && <FeatureBoundary label="Project catalog" onDismiss={() => { setCatalogMounted(false); setAllProjectsOpen(false); }}><Suspense fallback={<span className="sr-only" role="status">Loading catalog…</span>}><AllProjectsModal
+      {catalogMounted && <FeatureBoundary label={t("Project catalog")} onDismiss={() => { setCatalogMounted(false); setAllProjectsOpen(false); }}><Suspense fallback={<span className="sr-only" role="status">{t("Loading catalog…")}</span>}><AllProjectsModal
         githubNotice={githubNotice}
         isOpen={allProjectsOpen}
         onClose={() => setAllProjectsOpen(false)}
@@ -154,7 +156,7 @@ export default function App() {
       /></Suspense></FeatureBoundary>}
 
       {/* Photo Customization Modal */}
-      {photoModalOpen && <FeatureBoundary label="Portrait editor" onDismiss={() => setPhotoModalOpen(false)}><Suspense fallback={<span className="sr-only" role="status">Loading editor…</span>}><PhotoChangeModal
+      {photoModalOpen && <FeatureBoundary label={t("Portrait editor")} onDismiss={() => setPhotoModalOpen(false)}><Suspense fallback={<span className="sr-only" role="status">{t("Loading editor…")}</span>}><PhotoChangeModal
         isOpen={photoModalOpen}
         onClose={() => setPhotoModalOpen(false)}
         currentPhoto={photoUrl}

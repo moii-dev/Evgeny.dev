@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import React, { useState, useCallback, useRef } from 'react';
 import { Camera } from 'lucide-react';
 import { assetUrl } from '../utils/urls';
@@ -51,16 +52,13 @@ export const Hero: React.FC<Props> = ({
             <div>
               {/* Main Headline */}
               <h1 className="font-serif text-5xl sm:text-6xl lg:text-[76px] leading-[1.04] tracking-[-0.02em] font-normal text-neutral-950 mb-6">
-                <span>Building Digital</span>
+                <span>{t("Building Digital")}</span>
                 <br />
-                <span className="text-[#9ca3af]">Experiences.</span>
+                <span className="text-[#9ca3af]">{t("Experiences.")}</span>
               </h1>
 
               {/* Description */}
-              <p className="text-neutral-600 text-base sm:text-lg max-w-lg leading-relaxed mb-8 font-normal">
-                I build thoughtful applications, modern interfaces and digital products that make
-                complex things feel simple.
-              </p>
+              <p className="text-neutral-600 text-base sm:text-lg max-w-lg leading-relaxed mb-8 font-normal">{t("I build thoughtful applications, modern interfaces and digital products that make complex things feel simple.")}</p>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-3.5 mb-12">
@@ -68,16 +66,12 @@ export const Hero: React.FC<Props> = ({
                   onClick={onOpenProjects}
                   data-magnetic
                   className="px-6 py-3 rounded-full bg-neutral-950 hover:bg-black text-white text-sm font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm"
-                >
-                  Explore projects
-                </button>
+                >{t("Explore projects")}</button>
                 <button
                   onClick={onOpenAbout}
                   data-magnetic
                   className="px-6 py-3 rounded-full bg-[#dedede] hover:bg-[#d4d4d4] text-neutral-900 text-sm font-medium transition-all duration-200 border border-neutral-300/40"
-                >
-                  About me
-                </button>
+                >{t("About me")}</button>
               </div>
             </div>
 
@@ -87,27 +81,21 @@ export const Hero: React.FC<Props> = ({
                 <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-950 tracking-tight font-sans">
                   {projectCount > 0 ? `${projectCount}+` : '10+'}
                 </div>
-                <div className="text-xs sm:text-sm text-neutral-500 mt-1 font-normal">
-                  Projects built
-                </div>
+                <div className="text-xs sm:text-sm text-neutral-500 mt-1 font-normal">{t("Projects built")}</div>
               </div>
 
               <div>
                 <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-950 tracking-tight font-sans">
                   {techCount > 0 ? `${techCount}+` : '5+'}
                 </div>
-                <div className="text-xs sm:text-sm text-neutral-500 mt-1 font-normal">
-                  Technologies
-                </div>
+                <div className="text-xs sm:text-sm text-neutral-500 mt-1 font-normal">{t("Technologies")}</div>
               </div>
 
               <div>
                 <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-neutral-950 tracking-tight font-sans">
                   ∞
                 </div>
-                <div className="text-xs sm:text-sm text-neutral-500 mt-1 font-normal">
-                  Ideas to explore
-                </div>
+                <div className="text-xs sm:text-sm text-neutral-500 mt-1 font-normal">{t("Ideas to explore")}</div>
               </div>
             </div>
           </div>
@@ -124,7 +112,7 @@ export const Hero: React.FC<Props> = ({
               fetchPriority="high"
               decoding="async"
               onError={() => setFailedSource(photoUrl)}
-              alt="Evgeny - Developer Portrait"
+              alt={t("Evgeny - Developer Portrait")}
               className={`w-full h-full object-cover object-top transition-all duration-700 ${
                 isMonochrome ? 'grayscale contrast-105 brightness-95' : ''
               }`}
@@ -133,11 +121,11 @@ export const Hero: React.FC<Props> = ({
             {/* Subtle "Change Photo / Заменить фото" customizer button */}
             <button
               onClick={onOpenPhotoChange}
-              title="Personalize or replace portrait photo"
+              title={t("Personalize or replace portrait photo")}
               className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full bg-white/70 hover:bg-white text-neutral-800 backdrop-blur-md border border-white/50 text-[11px] font-medium flex items-center gap-1.5 shadow-xs transition-all hover:scale-105"
             >
               <Camera size={13} />
-              <span>Change photo</span>
+              <span>{t("Change photo")}</span>
             </button>
           </div>
 

@@ -24,8 +24,8 @@
 }
 
 @theme {
-  --font-serif: "Instrument Serif", "Newsreader", Georgia, serif;
-  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Instrument Serif", "Cormorant Garamond", "Newsreader", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", "Golos Text", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 
@@ -57,4 +57,12 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
+}
+
+/* Keep translated labels flexible without changing the typographic scale. */
+:lang(ru) #about .whitespace-nowrap { white-space: normal; }
+.language-switcher button { touch-action: manipulation; }
+@media (max-width: 359px) {
+  header .language-switcher button { padding-inline: 4px; }
+  header > div:first-child { gap: 4px; }
 }

@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Project } from '../types/project';
@@ -41,7 +42,7 @@ export const ProjectCard: React.FC<Props> = ({ project, onSelect, customScreensh
                 onSelect(project);
               }}
               className="w-10 h-10 rounded-xl bg-white border border-neutral-200/80 flex items-center justify-center text-neutral-800 group-hover:bg-black group-hover:text-white group-hover:border-black transition-all duration-300 shrink-0 shadow-xs"
-              aria-label={`View ${project.title} details`}
+              aria-label={t('View {title} details', { title: project.title })}
             >
               <ArrowUpRight size={18} strokeWidth={2.2} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
@@ -49,12 +50,12 @@ export const ProjectCard: React.FC<Props> = ({ project, onSelect, customScreensh
 
           {/* Category */}
           <div className="text-xs sm:text-sm font-medium text-neutral-500 mb-3">
-            {project.category}
+            {t(project.category)}
           </div>
 
           {/* Description */}
           <p className="text-xs sm:text-sm text-neutral-600 leading-relaxed line-clamp-2 mb-5 font-normal">
-            {project.description}
+            {t(project.description)}
           </p>
         </div>
 

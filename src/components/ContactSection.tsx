@@ -1,3 +1,4 @@
+import { t } from '../i18n';
 import { usePrefersReducedMotion as useReducedMotion } from '../hooks/usePrefersReducedMotion';
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUpRight, Check, Github, Mail, Loader2, AlertCircle } from 'lucide-react';
@@ -146,10 +147,10 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
 
   const handleOpenMailto = () => {
     const subject = encodeURIComponent(
-      `Inquiry from ${formName || 'Evgeny.dev Visitor'} — ${CONTACT_CONFIG.form.defaultSubject}`
+      t('Inquiry from {name} — {subject}', { name: formName || t('Evgeny.dev Visitor'), subject: t(CONTACT_CONFIG.form.defaultSubject) })
     );
     const body = encodeURIComponent(
-      `Name: ${formName}\nEmail: ${formEmail}\n\nMessage:\n${formMsg}`
+      t('Name: {name}\nEmail: {email}\n\nMessage:\n{message}', { name: formName, email: formEmail, message: formMsg })
     );
     window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
   };
@@ -209,27 +210,23 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
       >
         <div>
           {/* Section Kicker */}
-          <span className="text-xs sm:text-sm font-semibold tracking-wider text-neutral-400 uppercase font-mono block mb-3">
-            05 / GET IN TOUCH
-          </span>
+          <span className="text-xs sm:text-sm font-semibold tracking-wider text-neutral-400 uppercase font-mono block mb-3">{t("05 / GET IN TOUCH")}</span>
 
           {/* Large Two-Line Editorial Headline */}
           <h2 className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-[76px] leading-[1.03] tracking-tight font-normal mb-5">
-            <span className="text-neutral-950 block">Have an idea?</span>
-            <span className="text-[#9ca3af] block">Let's make it real.</span>
+            <span className="text-neutral-950 block">{t("Have an idea?")}</span>
+            <span className="text-[#9ca3af] block">{t("Let's make it real.")}</span>
           </h2>
 
           {/* Description matching exact brief */}
-          <p className="text-neutral-600 text-sm sm:text-base max-w-xl font-normal leading-relaxed">
-            Whether it's a new project, an interesting collaboration, or just a conversation — I'd love to hear from you.
-          </p>
+          <p className="text-neutral-600 text-sm sm:text-base max-w-xl font-normal leading-relaxed">{t("Whether it's a new project, an interesting collaboration, or just a conversation — I'd love to hear from you.")}</p>
         </div>
 
         {/* Top-Right Minimalist Round Arrow Button */}
         <div className="self-start md:self-end pt-2 md:pt-0">
           <button
             onClick={handleScrollToForm}
-            aria-label="Scroll to contact form"
+            aria-label={t("Scroll to contact form")}
             className="w-12 h-12 sm:w-14 sm:h-14 rounded-full border border-neutral-300 hover:border-black bg-white hover:bg-neutral-50 text-neutral-800 hover:text-black transition-all duration-300 flex items-center justify-center shadow-2xs hover:scale-105 active:scale-95 cursor-pointer group"
           >
             <ArrowUpRight
@@ -260,19 +257,11 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
 
           {/* Top Content */}
           <div className="relative z-10">
-            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-neutral-400 font-mono block mb-4">
-              LET'S CONNECT
-            </span>
+            <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-neutral-400 font-mono block mb-4">{t("LET'S CONNECT")}</span>
 
-            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[46px] leading-[1.08] font-normal tracking-tight text-white mb-4">
-              Great things start
-              <br />
-              with a conversation.
-            </h3>
+            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[46px] leading-[1.08] font-normal tracking-tight text-white mb-4">{t("Great things start")}<br />{t("with a conversation.")}</h3>
 
-            <p className="text-neutral-400 text-xs sm:text-sm md:text-base leading-relaxed max-w-md font-normal">
-              Have a project in mind? I'm always interested in meaningful ideas, creative challenges, and new opportunities.
-            </p>
+            <p className="text-neutral-400 text-xs sm:text-sm md:text-base leading-relaxed max-w-md font-normal">{t("Have a project in mind? I'm always interested in meaningful ideas, creative challenges, and new opportunities.")}</p>
           </div>
 
           {/* Bottom Action Controls */}
@@ -283,7 +272,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
               data-magnetic
               className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-white hover:bg-neutral-100 text-black text-xs sm:text-sm font-semibold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md flex items-center gap-2 group/btn cursor-pointer"
             >
-              <span>Start a conversation</span>
+              <span>{t("Start a conversation")}</span>
               <ArrowUpRight
                 size={16}
                 className="transition-transform duration-200 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"
@@ -297,7 +286,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                   CONTACT_CONFIG.availability.isAvailable ? 'bg-neutral-200' : 'bg-neutral-400'
                 }`}
               />
-              <span>{CONTACT_CONFIG.availability.statusText}</span>
+              <span>{t(CONTACT_CONFIG.availability.statusText)}</span>
             </div>
           </div>
         </motion.div>
@@ -313,12 +302,8 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
           }`}
         >
           <div>
-            <h3 className="font-serif text-2xl sm:text-3xl text-neutral-900 font-normal tracking-tight">
-              Drop me a message.
-            </h3>
-            <p className="text-neutral-500 text-xs sm:text-sm mt-1 mb-6 font-normal">
-              Tell me a little about your idea.
-            </p>
+            <h3 className="font-serif text-2xl sm:text-3xl text-neutral-900 font-normal tracking-tight">{t("Drop me a message.")}</h3>
+            <p className="text-neutral-500 text-xs sm:text-sm mt-1 mb-6 font-normal">{t("Tell me a little about your idea.")}</p>
 
             {/* Success State */}
             {submitStatus === 'success' && (
@@ -326,17 +311,13 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                 <div className="w-10 h-10 rounded-full bg-black text-white mx-auto flex items-center justify-center">
                   <Check size={18} />
                 </div>
-                <h4 role="status" className="text-sm font-semibold text-neutral-900">Message sent successfully!</h4>
-                <p className="text-xs text-neutral-500 leading-relaxed">
-                  Thank you for reaching out. I'll get back to you shortly.
-                </p>
+                <h4 role="status" className="text-sm font-semibold text-neutral-900">{t("Message sent successfully!")}</h4>
+                <p className="text-xs text-neutral-500 leading-relaxed">{t("Thank you for reaching out. I'll get back to you shortly.")}</p>
                 <button
                   type="button"
                   onClick={handleResetForm}
                   className="mt-2 text-xs font-semibold text-neutral-800 underline hover:text-black cursor-pointer"
-                >
-                  Send another message
-                </button>
+                >{t("Send another message")}</button>
               </div>
             )}
 
@@ -345,27 +326,23 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
               <div className="p-5 sm:p-6 rounded-2xl bg-white border border-neutral-200 space-y-3 my-4 text-left">
                 <div className="flex items-center gap-2 text-neutral-900 font-semibold text-xs sm:text-sm">
                   <Mail size={16} />
-                  <span role="status">Message ready to send</span>
+                  <span role="status">{t("Message ready to send")}</span>
                 </div>
-                <p className="text-xs text-neutral-600 leading-relaxed">
-                  Your inquiry has been formulated. Click below to deliver it directly to <strong className="font-semibold text-neutral-900">{email}</strong> via your email app.
-                </p>
+                <p className="text-xs text-neutral-600 leading-relaxed">{t("Your inquiry has been formulated. Click below to deliver it directly to")}{" "}<strong className="font-semibold text-neutral-900">{email}</strong>{" "}{t("via your email app.")}</p>
                 <div className="pt-1 flex flex-col gap-2">
                   <button
                     type="button"
                     onClick={handleOpenMailto}
                     className="w-full py-3 rounded-xl bg-black hover:bg-neutral-800 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
                   >
-                    <span>Open in Email App</span>
+                    <span>{t("Open in Email App")}</span>
                     <ArrowUpRight size={14} />
                   </button>
                   <button
                     type="button"
                     onClick={() => { setSubmitStatus('idle'); setErrors({}); }}
                     className="w-full py-2 text-xs font-medium text-neutral-500 hover:text-neutral-800 cursor-pointer"
-                  >
-                    Edit message
-                  </button>
+                  >{t("Edit message")}</button>
                 </div>
               </div>
             )}
@@ -374,19 +351,17 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
             {submitStatus === 'error' && errorMessage && (
               <div role="alert" className="p-3.5 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
                 <AlertCircle size={15} className="shrink-0" />
-                <span>{errorMessage}</span>
+                <span>{t(errorMessage)}</span>
               </div>
             )}
 
             {/* Active Form */}
             {submitStatus !== 'success' && submitStatus !== 'fallback' && (
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
-                <p role="alert" className="sr-only">{Object.values(errors).filter(Boolean).join('. ')}</p>
+                <p role="alert" className="sr-only">{Object.values(errors).filter(Boolean).map(error => t(error)).join('. ')}</p>
                 {/* Field: Your name */}
                 <div>
-                  <label htmlFor="contact-name" className="block text-xs font-medium text-neutral-700 mb-1.5">
-                    Your name
-                  </label>
+                  <label htmlFor="contact-name" className="block text-xs font-medium text-neutral-700 mb-1.5">{t("Your name")}</label>
                   <input
                     ref={nameInputRef}
                     id="contact-name"
@@ -394,7 +369,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     type="text"
                     required
-                    placeholder="How should I call you?"
+                    placeholder={t("How should I call you?")}
                     value={formName}
                     onChange={(e) => {
                       setFormName(e.target.value);
@@ -408,15 +383,13 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     }`}
                   />
                   {errors.name && (
-                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-name-error">{errors.name}</p>
+                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-name-error">{t(errors.name)}</p>
                   )}
                 </div>
 
                 {/* Field: Email address */}
                 <div>
-                  <label htmlFor="contact-email" className="block text-xs font-medium text-neutral-700 mb-1.5">
-                    Email address
-                  </label>
+                  <label htmlFor="contact-email" className="block text-xs font-medium text-neutral-700 mb-1.5">{t("Email address")}</label>
                   <input
                     id="contact-email"
                     aria-invalid={Boolean(errors.email)}
@@ -437,22 +410,20 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     }`}
                   />
                   {errors.email && (
-                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-email-error">{errors.email}</p>
+                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-email-error">{t(errors.email)}</p>
                   )}
                 </div>
 
                 {/* Field: What's on your mind? */}
                 <div>
-                  <label htmlFor="contact-message" className="block text-xs font-medium text-neutral-700 mb-1.5">
-                    What's on your mind?
-                  </label>
+                  <label htmlFor="contact-message" className="block text-xs font-medium text-neutral-700 mb-1.5">{t("What's on your mind?")}</label>
                   <textarea
                     id="contact-message"
                     aria-invalid={Boolean(errors.message)}
                     aria-describedby={errors.message ? 'contact-message-error' : undefined}
                     rows={4}
                     required
-                    placeholder="Tell me about your project..."
+                    placeholder={t("Tell me about your project...")}
                     value={formMsg}
                     onChange={(e) => {
                       setFormMsg(e.target.value);
@@ -466,7 +437,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     }`}
                   />
                   {errors.message && (
-                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-message-error">{errors.message}</p>
+                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-message-error">{t(errors.message)}</p>
                   )}
                 </div>
 
@@ -479,11 +450,11 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                   {isSubmitting ? (
                     <>
                       <Loader2 size={15} className="animate-spin" />
-                      <span>Sending...</span>
+                      <span>{t("Sending...")}</span>
                     </>
                   ) : (
                     <>
-                      <span>Send message</span>
+                      <span>{t("Send message")}</span>
                       <ArrowUpRight
                         size={15}
                         className="transition-transform duration-200 group-hover/submit:translate-x-0.5 group-hover/submit:-translate-y-0.5"
@@ -507,9 +478,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
       >
         {/* Left: Label & horizontal line */}
         <div className="flex items-center gap-4 flex-1">
-          <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-wider text-neutral-500 uppercase whitespace-nowrap">
-            FIND ME ONLINE
-          </span>
+          <span className="text-[11px] sm:text-xs font-mono font-semibold tracking-wider text-neutral-500 uppercase whitespace-nowrap">{t("FIND ME ONLINE")}</span>
           <div className="hidden sm:block flex-1 h-px bg-neutral-200" />
         </div>
 
@@ -550,7 +519,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
               className="px-4 py-2.5 rounded-xl border border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-400 text-neutral-800 text-xs sm:text-sm font-medium flex items-center gap-2 transition-all duration-200 group shadow-2xs"
             >
               <Mail size={15} className="text-neutral-700 group-hover:text-black transition-colors" />
-              <span>Email</span>
+              <span>{t("Email")}</span>
               <ArrowUpRight size={13} className="text-neutral-400 group-hover:text-black transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           )}

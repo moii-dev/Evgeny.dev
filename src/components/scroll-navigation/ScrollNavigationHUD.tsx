@@ -1,3 +1,4 @@
+import { t } from '../../i18n';
 import React, { useRef } from 'react';
 import { motion } from 'motion/react';
 import { NAVIGATION_SECTIONS } from '../../config/navigationSections';
@@ -25,7 +26,7 @@ export const ScrollNavigationHUD: React.FC = () => {
   return (
     <div
       className="hud-overlay"
-      aria-label="Floating navigation HUD"
+      aria-label={t("Floating navigation HUD")}
     >
       <CharacterMotionPath
         ref={pathRef}
@@ -39,7 +40,7 @@ export const ScrollNavigationHUD: React.FC = () => {
             data-transit-section={sec.id}
             className="hud-transit-group"
           >
-            {splitCharacters(sec.label, sec.id).map((token) => (
+            {splitCharacters(t(sec.label), sec.id).map((token) => (
               <span
                 key={token.id}
                 data-transit-char={token.index}
@@ -57,15 +58,15 @@ export const ScrollNavigationHUD: React.FC = () => {
 
       <nav
         className="hud-panel"
-        aria-label="Section shortcuts"
+        aria-label={t("Section shortcuts")}
       >
         <div className="hud-active-slot">
           <button data-active-header={activeSection.id} onClick={() => scrollToSection(activeSection.id)}
             className="font-sans text-[13px] sm:text-sm font-semibold tracking-[-0.02em] text-[#111111] cursor-pointer"
-            aria-label={`Current section: ${activeSection.label}`} aria-current="location">
+            aria-label={t('Current section: {section}', { section: t(activeSection.label) })} aria-current="location">
             <motion.span key={activeSection.id} className="inline-block"
               initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.2 }}>{activeSection.label}</motion.span>
+              transition={{ duration: reducedMotion ? 0 : 0.2 }}>{t(activeSection.label)}</motion.span>
           </button>
         </div>
 
@@ -84,15 +85,13 @@ export const ScrollNavigationHUD: React.FC = () => {
               data-next-label={nextSection.id}
               onClick={() => scrollToSection(nextSection.id)}
               className="font-mono text-[11px] text-[#777777] hover:text-[#111111] transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1"
-              aria-label={`Jump to next section ${nextSection.label}`}
+              aria-label={t('Jump to next section {section}', { section: t(nextSection.label) })}
             >
-              <span>NEXT / {nextSection.label}</span>
+              <span>{t("NEXT /")}{" "}{t(nextSection.label)}</span>
               <span className="text-[10px]">↗</span>
             </button>
           ) : (
-            <span className="font-mono text-[10px] text-neutral-400 select-none">
-              04 / END
-            </span>
+            <span className="font-mono text-[10px] text-neutral-400 select-none">{t("04 / END")}</span>
           )}
         </div>
       </nav>
