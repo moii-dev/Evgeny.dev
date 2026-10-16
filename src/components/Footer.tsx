@@ -4,6 +4,7 @@ import React from 'react';
 import { ArrowUp } from 'lucide-react';
 import { motion } from 'motion/react';
 import { scrollToSection } from '../utils/scrollController';
+import { PortfolioTerminal } from './PortfolioTerminal';
 
 export const Footer: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
@@ -16,6 +17,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-[#fafaf9] pt-8 pb-10 sm:pb-14 px-4 sm:px-6 lg:px-8 border-t border-neutral-200/80">
       <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
+        <PortfolioTerminal />
         {/* 1. Upper Bar: Brand lockup & Mission Tagline */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4">
           {/* Left: Geometric E Monogram & Evgeny.dev */}
