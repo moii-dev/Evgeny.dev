@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { fetchGitHubRepos, mergeGitHubProjects } from '../src/services/githubService';
 import type { GitHubRepo } from '../src/types/project';
-import { ALL_LOCAL_PROJECTS } from '../src/data/featuredProjects';
+import { ALL_LOCAL_PROJECTS, FEATURED_PROJECTS } from '../src/data/featuredProjects';
 
 const values = new Map<string, string>();
 Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: {
@@ -96,4 +96,35 @@ test('live stars do not conflict with a stale hardcoded cover statistic', () => 
   const project = result.find(item => item.id === 'yandex-adblocker');
   assert.equal(project?.stars, 99);
   assert.doesNotMatch(project?.cover?.badgeText || '', /\d+\s+stars/i);
+});
+
+test('featured selection survives stale cache and repeated API sync without duplicates or empty descriptions', async () => {
+  const stale = ALL_LOCAL_PROJECTS.map(project => ({ ...project,
+    title: project.id === 'yandex-adblocker' ? 'Old title' : project.title,
+    description: '', longDescription: '', stars: 17, forks: 3,
+    featured: ['freechat', 'worldbox-react', 'figmint', 'luma'].includes(project.id),
+  }));
+  values.set('evgeny_portfolio_github_repos_v5_moii-dev', JSON.stringify({
+    username: 'moii-dev', updatedAt: Date.now(), repos: stale,
+  }));
+  const cached = await fetchGitHubRepos();
+  assert.equal(cached.source, 'cache');
+  assert.deepEqual(cached.repos.filter(p => p.featured).map(p => p.title),
+    ['FreeChat', 'MultiPulti', 'Yandex Search AdBlocked', 'WorldBox-React']);
+  assert.equal(cached.repos[0].stars, 17);
+  assert.equal(cached.repos[0].forks, 3);
+  const api = FEATURED_PROJECTS.map(project => ({ ...repo(project.githubUrl.split('/').pop()!), description: null, language: null }));
+  const merged = mergeGitHubProjects([...api, ...api], 'moii-dev', cached.repos);
+  assert.equal(merged.length, ALL_LOCAL_PROJECTS.length);
+  assert.equal(new Set(merged.map(p => p.githubUrl.toLowerCase())).size, merged.length);
+  for (const curated of FEATURED_PROJECTS) {
+    const project = merged.find(p => p.id === curated.id)!;
+    assert.equal(project.description, curated.description);
+    assert.equal(project.longDescription, curated.longDescription);
+    assert.deepEqual(project.tags, curated.tags);
+    assert.equal(project.language, curated.language);
+    assert.equal(project.stars, 99);
+    assert.equal(project.forks, 21);
+  }
+  for (const id of ['figmint', 'luma']) assert.equal(merged.find(p => p.id === id)?.featured, false);
 });

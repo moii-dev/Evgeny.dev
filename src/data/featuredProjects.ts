@@ -1,32 +1,7 @@
 import { Project } from '../types/project';
 
-/**
- * FEATURED_PROJECTS (Selected Projects)
- *
- * Curated Selection of moii-dev's Strongest, Most Technical & Visually Compelling Public Repositories:
- *
- * 01. FreeChat (Android AI Assistant & Full-Stack Cloud Routing)
- *     - Kotlin, Jetpack Compose, Material 3, Node.js, PostgreSQL
- *     - Flagship project per user specification
- *
- * 02. WorldBox-React (Interactive 2D World Simulation Sandbox & Civilization Engine)
- *     - React 19, TypeScript 5.8, HTML5 Canvas, Procedural Generation
- *     - Procedural continents, cellular automata, kingdom diplomacy & god powers
- *     - Includes real 1672x941 game screenshot (world-menu-background.png)
- *
- * 03. Figmint (Local-First Vector Design & Interactive Prototyping Studio)
- *     - React 19, TypeScript, HTML5 Canvas, Vector Geometry & Bezier Math
- *     - Infinite canvas, layer tree, vector pen, Smart Animate, multi-format export
- *
- * 04. Luma (Emotional Rhythm & Mood Tracking App with Dynamic Aura Generator)
- *     - Kotlin, Jetpack Compose, Room DB, Android Desktop Widgets, Canvas Shaders
- *     - Includes real 1280x2856 mobile screenshot (build-luma-aura.png)
- *
- * Excluded per user instructions:
- * - Вкапибара (excluded)
- * - Multi-pulti (excluded)
- * - FocusLock (excluded)
- */
+// Curated order. Descriptions and stacks verified against repository READMEs.
+// GitHub statistics checked on 2026-10-16; live sync refreshes them.
 export const FEATURED_PROJECTS: Project[] = [
   {
     id: 'freechat',
@@ -35,10 +10,11 @@ export const FEATURED_PROJECTS: Project[] = [
     category: 'Android Application / AI Platform',
     description: 'Android AI chat client with server-side AI routing, screen assistant, Telegram/VK auth, and Node.js/PostgreSQL backend.',
     longDescription:
-      'Полнофункциональный мобильный AI-ассистент для Android с серверной маршрутизацией запросов, экранным помощником, распознаванием изображений и документов, публичными ссылками на чаты и бэкендом на Node.js/PostgreSQL. Разработан на Kotlin с использованием Jetpack Compose, Material 3 и чистой архитектуры (MVVM / Clean Architecture).',
+      'Android AI-чат на Kotlin с Compose для авторизации и XML/ViewBinding для основного интерфейса. Поддерживает потоковые ответы, изображения и документы, генерацию изображений, экранного ассистента, вход через Telegram/VK и публичные ссылки на чаты. Node.js/Express backend хранит данные в PostgreSQL, синхронизирует диалоги и управляет AI-провайдерами, ключами и лимитами на сервере.',
     tags: ['Kotlin', 'Jetpack Compose', 'Node.js', 'PostgreSQL'],
     githubUrl: 'https://github.com/moii-dev/FreeChat',
     stars: 2,
+    forks: 0,
     language: 'Kotlin',
     featured: true,
     updatedAt: '2026-08-23',
@@ -52,16 +28,68 @@ export const FEATURED_PROJECTS: Project[] = [
     },
   },
   {
-    id: 'worldbox-react',
+    id: 'multipulti',
     number: '02',
+    title: 'MultiPulti',
+    category: 'Web App / Drawing & Animation',
+    description: 'Browser animation studio with drawing tools, frame-by-frame playback, a local project library, and PNG/GIF export.',
+    longDescription:
+      'Детская веб-мультстудия на React 19, TypeScript и HTML5 Canvas. Кисть, ластик, заливка, фигуры, текст и стикеры помогают создавать покадровую анимацию с Undo/Redo и выбором скорости воспроизведения. Независимые проекты сохраняются локально в IndexedDB; доступны импорт изображений, экспорт кадра в PNG и мультфильма в GIF.',
+    tags: ['React 19', 'TypeScript', 'HTML5 Canvas', 'IndexedDB'],
+    githubUrl: 'https://github.com/moii-dev/MultiPulti',
+    demoUrl: 'https://multi-pulti.onrender.com',
+    stars: 1,
+    forks: 0,
+    language: 'TypeScript',
+    featured: true,
+    updatedAt: '2026-10-09',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'slate',
+      primaryImage: '/assets/projects/multipulti/screenshot.webp',
+      logoUrl: '/assets/projects/multipulti/logo.png',
+      badgeText: 'Canvas · Frame-by-Frame · GIF',
+      caption: 'Drawing and animation studio with a local project library',
+      altText: 'MultiPulti drawing and animation editor',
+    },
+  },
+  {
+    id: 'yandex-adblocker',
+    number: '03',
+    title: 'Yandex Search AdBlocked',
+    category: 'Extension / Utility',
+    description: 'Manifest V3 extension for Chrome, Chromium and Edge that hides ads in Yandex search and filters dynamically loaded results.',
+    longDescription:
+      'Yandex Search AdBlocker — расширение Manifest V3 для Chrome, Chromium и Edge. Скрывает рекламные блоки в выдаче Яндекса по классам контейнеров, рекламным ссылкам и коротким меткам. MutationObserver отслеживает новые результаты; повторная фильтрация запускается с задержкой. Попап показывает статус, статистику и переключатель для текущей страницы. Неофициальный проект, не связанный с Яндексом.',
+    tags: ['JavaScript', 'Manifest V3', 'DOM API', 'MutationObserver'],
+    githubUrl: 'https://github.com/moii-dev/Yandex-AdBlocker',
+    stars: 4,
+    forks: 0,
+    language: 'JavaScript',
+    featured: true,
+    updatedAt: '2026-09-15',
+    cover: {
+      variant: 'single',
+      backgroundTheme: 'neutral',
+      primaryImage: '/assets/projects/yandex-adblocker/banner.webp',
+      badgeText: 'Chrome MV3 · Search Filter',
+      caption: 'Ad filtering for Yandex search in Chromium browsers',
+      altText: 'Yandex Search AdBlocker repository banner',
+    },
+  },
+  {
+    id: 'worldbox-react',
+    number: '04',
     title: 'WorldBox-React',
     category: 'Web Game / Simulation Engine',
-    description: 'Interactive 2D world & civilization sandbox simulator with procedural terrain, cellular automata climate, and autonomous kingdoms.',
+    description: '2D world sandbox with seeded terrain, autonomous settlements, kingdom diplomacy, god powers, and local saves with JSON export.',
     longDescription:
-      'Комплексный симулятор цивилизаций и процедурной экосистемы на React 19, TypeScript и HTML5 Canvas. Включает процедурную генерацию континентов, островов и архипелагов с воспроизводимыми сидами, симуляцию климатических зон, автономное население (профессии, старение, семьи), эволюцию королевств, дипломатию, торговлю, войну и божественные силы с частицами.',
-    tags: ['React 19', 'TypeScript', 'HTML5 Canvas', 'Simulation Engine'],
+      'Неофициальная учебная 2D-песочница в духе WorldBox на React 19, TypeScript и HTML5 Canvas. Генерирует континенты и архипелаги по воспроизводимым сидам, моделирует жителей, животных, ресурсы и развитие поселений в королевства с торговлей, войнами и дипломатией. Инструменты бога меняют биомы и вызывают катаклизмы. Мир сохраняется в трёх локальных слотах и экспортируется в JSON.',
+    tags: ['React 19', 'TypeScript', 'HTML5 Canvas', 'Vite'],
     githubUrl: 'https://github.com/moii-dev/WorldBox-React',
+    demoUrl: 'https://worldbox-react.onrender.com/',
     stars: 0,
+    forks: 0,
     language: 'TypeScript',
     featured: true,
     updatedAt: '2026-09-22',
@@ -75,9 +103,14 @@ export const FEATURED_PROJECTS: Project[] = [
       objectFit: 'cover',
     },
   },
+];
+
+// Keep the complete local catalog available even when GitHub is offline.
+export const ALL_LOCAL_PROJECTS: Project[] = [
+  ...FEATURED_PROJECTS,
   {
     id: 'figmint',
-    number: '03',
+    number: '05',
     title: 'Figmint',
     category: 'Web App / Vector Design Studio',
     description: 'Local-first vector design & interactive prototyping studio with infinite canvas, layer tree, vector pen, and Smart Animate.',
@@ -87,7 +120,7 @@ export const FEATURED_PROJECTS: Project[] = [
     githubUrl: 'https://github.com/moii-dev/Figmint',
     stars: 0,
     language: 'TypeScript',
-    featured: true,
+    featured: false,
     updatedAt: '2026-08-25',
     cover: {
       variant: 'single',
@@ -100,7 +133,7 @@ export const FEATURED_PROJECTS: Project[] = [
   },
   {
     id: 'luma',
-    number: '04',
+    number: '06',
     title: 'Luma',
     category: 'Android / Lifestyle & Wellness',
     description: 'Android emotional rhythm & mood tracking app featuring dynamic Aura visualization generator, desktop widgets, and Room database.',
@@ -110,7 +143,7 @@ export const FEATURED_PROJECTS: Project[] = [
     githubUrl: 'https://github.com/moii-dev/Luma',
     stars: 0,
     language: 'Kotlin',
-    featured: true,
+    featured: false,
     updatedAt: '2026-09-12',
     cover: {
       variant: 'single',
@@ -122,16 +155,9 @@ export const FEATURED_PROJECTS: Project[] = [
       objectFit: 'contain',
     },
   },
-];
-
-/**
- * All local projects representing the full public catalog of moii-dev.
- */
-export const ALL_LOCAL_PROJECTS: Project[] = [
-  ...FEATURED_PROJECTS,
   {
     id: 'onepass',
-    number: '05',
+    number: '07',
     title: 'OnePass',
     category: 'Extension / Security',
     description: 'Local TOTP/HOTP two-factor authenticator for Chromium browsers with client-side Web Crypto AES-GCM encryption and PIN.',
@@ -153,7 +179,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
   },
   {
     id: 'voroboff-bank',
-    number: '06',
+    number: '08',
     title: 'VorobOFF-Bank',
     category: 'Web App / Interactive Game',
     description: 'Mobile banking clicker game in React 19 featuring balance management, upgrade store, transfers, and wheel of fortune.',
@@ -173,30 +199,8 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     },
   },
   {
-    id: 'yandex-adblocker',
-    number: '07',
-    title: 'Yandex Search AdBlocker',
-    category: 'Extension / Utility',
-    description: 'Lightweight browser extension filtering sponsored ad units from Yandex search results.',
-    longDescription:
-      'Yandex Search AdBlocker — легкое браузерное расширение Manifest V3, которое скрывает рекламные блоки в поисковой выдаче Яндекса. Реализовано на JavaScript с DOM API.',
-    tags: ['JavaScript', 'Chrome MV3', 'DOM API'],
-    githubUrl: 'https://github.com/moii-dev/Yandex-AdBlocker',
-    stars: 4,
-    language: 'JavaScript',
-    featured: false,
-    updatedAt: '2026-09-15',
-    cover: {
-      variant: 'single',
-      backgroundTheme: 'neutral',
-      primaryImage: '/assets/projects/yandex-adblocker/banner.webp',
-      badgeText: 'Chrome MV3 · Search Filter',
-      caption: 'Zero-overhead search ad filter for Chromium browsers',
-    },
-  },
-  {
     id: 'qr-scanner',
-    number: '08',
+    number: '09',
     title: 'QR-Scanner',
     category: 'Android / Camera & ML Kit',
     description: 'High-performance QR & barcode scanner and generator for Android built with CameraX, Google ML Kit, and Room Database.',
@@ -218,7 +222,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
   },
   {
     id: 'gamma-cleaner',
-    number: '09',
+    number: '10',
     title: 'PPTX / PDF Watermark Cleaner',
     category: 'Desktop Tool / Document Processing',
     description: 'Windows utility (.NET & Python PyMuPDF) for removing Gamma presentation watermarks from PowerPoint and PDF files.',
@@ -240,7 +244,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
   },
   {
     id: 'block-yandex-game',
-    number: '10',
+    number: '11',
     title: 'Block Yandex Games',
     category: 'Extension / Productivity',
     description: 'DeclarativeNetRequest Chrome Manifest V3 extension blocking Yandex games navigation.',
@@ -262,7 +266,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
   },
   {
     id: 'codex-skills',
-    number: '11',
+    number: '12',
     title: 'Codex Skills',
     category: 'Developer Tools / CLI',
     description: 'Curated developer workflow skills and execution modules for Codex AI agent environment.',
@@ -281,10 +285,9 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
       caption: 'Agent modules for terminal workflows',
     },
   },
-  // Explicitly excluded from featured per prompt:
   {
     id: 'focuslock',
-    number: '12',
+    number: '13',
     title: 'FocusLock',
     category: 'Extension / Productivity',
     description: 'Chrome extension for managing Page Visibility and focus signals. (Excluded from featured)',
@@ -302,28 +305,6 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
       logoUrl: '/assets/projects/focuslock/icon128.png',
       badgeText: 'Chrome MV3 · StayActive',
       caption: 'Page Visibility & Focus Signals Control',
-    },
-  },
-  {
-    id: 'multipulti',
-    number: '13',
-    title: 'MultiPulti',
-    category: 'Web Tool / Animation',
-    description: 'Web editor for digital drawing and frame-by-frame 2D animation in browser. (Excluded from featured)',
-    longDescription:
-      'Веб-редактор для рисования и создания покадровой анимации в браузере на React, TypeScript и HTML5 Canvas.',
-    tags: ['React', 'TypeScript', 'Canvas', 'Vite'],
-    githubUrl: 'https://github.com/moii-dev/MultiPulti',
-    stars: 1,
-    language: 'TypeScript',
-    featured: false,
-    updatedAt: '2026-10-09',
-    cover: {
-      variant: 'single',
-      backgroundTheme: 'slate',
-      primaryImage: '/assets/projects/multipulti/screenshot.webp',
-      logoUrl: '/assets/projects/multipulti/logo.png',
-      badgeText: 'Canvas · Frame-by-Frame',
     },
   },
   {

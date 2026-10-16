@@ -3,6 +3,7 @@ import { ArrowUpRight, RefreshCw, Sparkles } from 'lucide-react';
 import { Project } from '../types/project';
 import { ProjectCard } from './ProjectCard';
 import { FEATURED_PROJECTS } from '../data/featuredProjects';
+import { repositoryIdentity } from '../services/githubService';
 
 interface Props {
   githubNotice: string;
@@ -25,12 +26,11 @@ export const ProjectsSection: React.FC<Props> = ({
   isLoading,
   fromCache,
 }) => {
-  // Always prioritize the 4 top curated featured projects: FreeChat, WorldBox-React, Figmint, Luma
-  const featuredIds = ['freechat', 'worldbox-react', 'figmint', 'luma'];
-  
-  const displayedProjects: Project[] = featuredIds.map((id) => {
-    return projects.find((p) => p.id === id) || FEATURED_PROJECTS.find((p) => p.id === id)!;
-  }).filter(Boolean);
+  const displayedProjects = FEATURED_PROJECTS.map((curated) => {
+    const synced = projects.find((project) => repositoryIdentity(project.githubUrl) === repositoryIdentity(curated.githubUrl));
+    return { ...curated, stars: synced?.stars ?? curated.stars, forks: synced?.forks ?? curated.forks,
+      updatedAt: synced?.updatedAt ?? curated.updatedAt, demoUrl: synced?.demoUrl ?? curated.demoUrl };
+  });
 
   return (
     <section id="projects" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -51,7 +51,7 @@ export const ProjectsSection: React.FC<Props> = ({
 
           {/* Subtitle */}
           <p className="text-neutral-600 text-sm sm:text-base max-w-lg leading-relaxed font-normal">
-            A curated showcase of verified production mobile applications, interactive simulation systems, and vector design tools from GitHub.
+            A curated showcase of an Android AI assistant, a browser animation studio, a search extension, and a world simulation sandbox.
           </p>
         </div>
 

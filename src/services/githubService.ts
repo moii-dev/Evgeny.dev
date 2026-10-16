@@ -36,7 +36,12 @@ export function mergeGitHubProjects(repos: GitHubRepo[], username: string, previ
   const merged = new Map<string, Project>();
   const identity = (project: Project) => repositoryIdentity(project.githubUrl) || `local:${project.id}`;
   for (const project of [...localProjects(username), ...previous]) {
-    if (!merged.has(identity(project))) merged.set(identity(project), project);
+    const key = identity(project);
+    const curated = merged.get(key);
+    merged.set(key, curated ? {
+      ...curated, stars: project.stars ?? curated.stars, forks: project.forks ?? curated.forks,
+      updatedAt: project.updatedAt ?? curated.updatedAt, demoUrl: httpUrl(project.demoUrl) || curated.demoUrl,
+    } : project);
   }
   for (const repo of repos) {
     if (repo.fork || repo.name.toLowerCase() === username) continue;
@@ -48,7 +53,7 @@ export function mergeGitHubProjects(repos: GitHubRepo[], username: string, previ
     const tags = [...new Set([repo.language, ...(repo.topics || []).slice(0, 3)].filter((tag): tag is string => Boolean(tag)))];
     const project: Project = local ? {
       ...local, stars: repo.stargazers_count, forks: repo.forks_count,
-      updatedAt: repo.updated_at.split('T')[0], demoUrl,
+      updatedAt: repo.updated_at.split('T')[0], language: repo.language || local.language, demoUrl,
     } : {
       id: repo.name.toLowerCase(), number: '', title: repo.name,
       category: repo.language ? `${repo.language} Project` : 'Software / Tool',
@@ -68,7 +73,7 @@ function readSnapshot(username: string): Snapshot | undefined {
   let snapshot: Snapshot | undefined;
   if (record(saved) && saved.username === username && typeof saved.updatedAt === 'number' &&
     Number.isFinite(saved.updatedAt) && saved.updatedAt > 0 && saved.updatedAt <= Date.now() && isProjectList(saved.repos)) {
-    snapshot = { username, updatedAt: saved.updatedAt, repos: numberProjects(saved.repos) };
+    snapshot = { username, updatedAt: saved.updatedAt, repos: mergeGitHubProjects([], username, saved.repos) };
   } else if (username === OWNER) {
     // Only the original owner used the v4 keys. Keep legacy data as an offline fallback.
     const legacy = readJson('evgeny_portfolio_github_repos_v4');

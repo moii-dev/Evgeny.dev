@@ -32,7 +32,7 @@ const check = (name, condition) => { assert.ok(condition, name); result.checks.p
         try { await route.fulfill({ body: fs.readFileSync(file), contentType: ({ '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.png': 'image/png', '.webp': 'image/webp', '.svg': 'image/svg+xml' })[path.extname(file)] || 'application/octet-stream' }); }
         catch { result.missingAssets.push(url.pathname); await route.fulfill({ status: 404, body: 'Missing asset' }); }
       } else if (url.hostname === 'api.github.com' && githubMode === 'live') {
-        await route.fulfill({ json: ['FreeChat', 'GAMMA-PPTX-Watermark-Cleaner', 'Live-only'].map(name => ({ id: 1, name, full_name: `moii-dev/${name}`, html_url: `https://github.com/moii-dev/${name}`, description: 'API description', language: 'TypeScript', homepage: null, stargazers_count: 99, forks_count: 21, updated_at: '2026-10-16T00:00:00Z', fork: false, topics: [] })) });
+        await route.fulfill({ json: ['FreeChat', 'MultiPulti', 'Yandex-AdBlocker', 'WorldBox-React', 'GAMMA-PPTX-Watermark-Cleaner', 'Live-only'].map(name => ({ id: 1, name, full_name: `moii-dev/${name}`, html_url: `https://github.com/moii-dev/${name}`, description: null, language: null, homepage: null, stargazers_count: 99, forks_count: 21, updated_at: '2026-10-16T00:00:00Z', fork: false, topics: [] })) });
       } else { if (url.origin === origin) result.missingAssets.push(url.pathname); await route.abort(); }
     });
     const page = await context.newPage();
@@ -43,9 +43,41 @@ const check = (name, condition) => { assert.ok(condition, name); result.checks.p
     check('page identity', (await page.title()).includes('Evgeny'));
     check('meaningful content', await page.locator('h1').isVisible());
     check('no framework overlay', await page.locator('vite-error-overlay').count() === 0);
+    const featuredTitles = ['FreeChat', 'MultiPulti', 'Yandex Search AdBlocked', 'WorldBox-React'];
+    for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+      await page.setViewportSize(viewport);
+      const section = page.locator('#projects');
+      check(`featured order ${viewport.width}`, JSON.stringify(await section.locator('h3').allTextContents()) === JSON.stringify(featuredTitles));
+      for (const title of featuredTitles) {
+        const trigger = section.getByRole('button', { name: `View ${title} details`, exact: true });
+        await trigger.click();
+        const modal = page.getByRole('dialog', { name: `${title} details`, exact: true });
+        await modal.waitFor({ state: 'visible' });
+        check(`${title} details ${viewport.width}`, await modal.locator('h2').textContent() === title);
+        const repoName = title === 'Yandex Search AdBlocked' ? 'Yandex-AdBlocker' : title;
+        check(`${title} repository ${viewport.width}`, await modal.locator(`a[href="https://github.com/moii-dev/${repoName}"]`).count() > 0);
+        check(`${title} responsive ${viewport.width}`, await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+        await page.keyboard.press('Escape');
+        check(`${title} closes and restores focus ${viewport.width}`, await trigger.evaluate(el => el === document.activeElement));
+      }
+      await section.scrollIntoViewIfNeeded();
+      await page.screenshot({ path: path.join(output, `featured-${viewport.width}.png`), fullPage: false });
+      await section.screenshot({ path: path.join(output, `featured-section-${viewport.width}.png`) });
+    }
     check('Open Graph image configured', (await page.locator('meta[property="og:image"]').getAttribute('content')).includes(base + 'assets/social-preview.png'));
     await page.getByRole('button', { name: 'All projects', exact: true }).click();
     const catalog = page.getByRole('dialog', { name: 'All Projects & Repositories', exact: true });
+    for (const title of [...featuredTitles, 'Figmint', 'Luma']) {
+      await catalog.getByRole('textbox', { name: 'Search projects' }).fill(title);
+      const trigger = catalog.getByRole('button', { name: `View ${title} details`, exact: true });
+      check(`${title} remains unique in catalog`, await trigger.count() === 1);
+      await trigger.click();
+      const modal = page.getByRole('dialog', { name: `${title} details`, exact: true });
+      await modal.waitFor({ state: 'visible' });
+      check(`${title} nested modal owns focus`, await modal.evaluate(el => el.contains(document.activeElement)));
+      await page.keyboard.press('Escape');
+      check(`${title} returns to catalog`, await catalog.isVisible() && await trigger.evaluate(el => el === document.activeElement));
+    }
     await catalog.getByRole('textbox', { name: 'Search projects' }).fill('WorldBox');
     const detailsButton = catalog.getByRole('button', { name: 'View WorldBox-React details', exact: true });
     await detailsButton.focus();
@@ -122,7 +154,7 @@ const check = (name, condition) => { assert.ok(condition, name); result.checks.p
     await changePhoto.click();
     check('portrait Reset starts next edit from default', await portraitDialog.getByAltText('Developer Portrait Preview').getAttribute('src') === originalPortrait);
     await page.keyboard.press('Escape');
-    for (const title of ['WorldBox-React', 'FreeChat', 'Figmint']) {
+    for (const title of featuredTitles) {
       await page.getByRole('button', { name: `View ${title} details`, exact: true }).click();
       const modal = page.getByRole('dialog', { name: `${title} details`, exact: true });
       await modal.locator('input[type=file]').setInputFiles({ name: 'broken.png', mimeType: 'image/png', buffer: Buffer.from('bad') });
@@ -219,6 +251,7 @@ const check = (name, condition) => { assert.ok(condition, name); result.checks.p
     await page.getByRole('button', { name: 'Refresh GitHub projects', exact: true }).click();
     await page.waitForFunction(() => !document.querySelector('[aria-label="Refresh GitHub projects"]').disabled);
     check('live sync reports success', await page.getByText(/Showing GitHub projects\./).count() > 0);
+    check('sync preserves featured order', JSON.stringify(await page.locator('#projects h3').allTextContents()) === JSON.stringify(featuredTitles));
     await page.getByRole('button', { name: 'All projects', exact: true }).click();
     await catalog.getByRole('textbox', { name: 'Search projects' }).fill('Live-only');
     check('live-only project visible', await catalog.getByRole('button', { name: 'View Live-only details', exact: true }).isVisible());
