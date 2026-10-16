@@ -1,14 +1,8 @@
 import { t } from '../i18n';
 import React, { useState, useCallback, useRef } from 'react';
-import { Camera } from 'lucide-react';
-import { assetUrl } from '../utils/urls';
 import { HeroBackground } from './HeroBackground';
 
 interface Props {
-  photoUrl: string;
-  defaultPhoto: string;
-  isMonochrome: boolean;
-  onOpenPhotoChange: () => void;
   onOpenProjects: () => void;
   onOpenAbout: () => void;
   projectCount: number;
@@ -16,16 +10,11 @@ interface Props {
 }
 
 export const Hero: React.FC<Props> = ({
-  photoUrl,
-  defaultPhoto,
-  isMonochrome,
-  onOpenPhotoChange,
   onOpenProjects,
   onOpenAbout,
   projectCount,
   techCount,
 }) => {
-  const [failedSource, setFailedSource] = useState('');
   const [mousePos, setMousePos] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
   const containerRef = useRef<HTMLDivElement>(null);
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -33,8 +22,8 @@ export const Hero: React.FC<Props> = ({
     setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   }, []);
   const handleMouseLeave = useCallback(() => setMousePos({ x: null, y: null }), []);
-  const src = failedSource === photoUrl ? defaultPhoto : assetUrl(photoUrl);
-  const portraitSrcSet = src === defaultPhoto ? `${import.meta.env.BASE_URL}assets/my-photo-640.webp 640w, ${import.meta.env.BASE_URL}assets/my-photo-960.webp 960w, ${defaultPhoto} 1098w` : undefined;
+  const portraitUrl = `${import.meta.env.BASE_URL}assets/my-photo.webp`;
+  const portraitSrcSet = `${import.meta.env.BASE_URL}assets/my-photo-640.webp 640w, ${import.meta.env.BASE_URL}assets/my-photo-960.webp 960w, ${portraitUrl} 1098w`;
   return (
     <section id="home" className="pt-24 sm:pt-28 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Huge Light-Gray Rounded Container matching Reference */}
@@ -104,29 +93,16 @@ export const Hero: React.FC<Props> = ({
           <div className="lg:col-span-5 relative min-h-[380px] lg:min-h-full flex items-end justify-center overflow-hidden bg-[#e0e0e0]">
             {/* Developer Portrait Image */}
             <img
-              src={src}
+              src={portraitUrl}
               srcSet={portraitSrcSet}
               sizes="(min-width: 1280px) 500px, (min-width: 1024px) 42vw, 100vw"
               width={1098}
               height={1433}
               fetchPriority="high"
               decoding="async"
-              onError={() => setFailedSource(photoUrl)}
               alt={t("Evgeny - Developer Portrait")}
-              className={`w-full h-full object-cover object-top transition-all duration-700 ${
-                isMonochrome ? 'grayscale contrast-105 brightness-95' : ''
-              }`}
+              className="w-full h-full object-cover object-top transition-all duration-700 grayscale contrast-105 brightness-95"
             />
-
-            {/* Subtle "Change Photo / Заменить фото" customizer button */}
-            <button
-              onClick={onOpenPhotoChange}
-              title={t("Personalize or replace portrait photo")}
-              className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full bg-white/70 hover:bg-white text-neutral-800 backdrop-blur-md border border-white/50 text-[11px] font-medium flex items-center gap-1.5 shadow-xs transition-all hover:scale-105"
-            >
-              <Camera size={13} />
-              <span>{t("Change photo")}</span>
-            </button>
           </div>
 
         </div>

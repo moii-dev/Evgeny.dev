@@ -1,35 +1,20 @@
 import { t, formatDate, statLabel } from '../i18n';
 import React from 'react';
-import { X, ExternalLink, Star, GitFork, Calendar, Code2, Upload, RotateCcw } from 'lucide-react';
+import { X, ExternalLink, Star, GitFork, Calendar, Code2 } from 'lucide-react';
 import { Project } from '../types/project';
 import { ProjectCover } from './ProjectCover';
 import { Modal } from './Modal';
-import { useImageUpload } from '../hooks/useImageUpload';
 import { repositoryIdentity } from '../services/githubService';
 
 interface Props {
   project: Project | null;
   onClose: () => void;
-  customScreenshot: string | null;
-  onChangeCover: (value: string | null) => void;
 }
 
-export const ProjectModal: React.FC<Props> = ({ project, onClose, customScreenshot, onChangeCover }) => {
-  const upload = useImageUpload(onChangeCover);
+export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
 
   if (!project) return null;
   const isRepository = Boolean(repositoryIdentity(project.githubUrl));
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (file) void upload.file(file);
-  };
-
-  const handleResetScreenshot = () => {
-    upload.cancel();
-    onChangeCover(null);
-  };
 
   return (
     <Modal isOpen={Boolean(project)} onClose={onClose} label={t('{title} details', { title: project.title })}>
@@ -50,34 +35,9 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose, customScreensh
             <ProjectCover
               project={project}
               size="modal"
-              customScreenshotUrl={customScreenshot || undefined}
             />
 
-            {/* In-app screenshot preview tester */}
-            <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5 bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-xl border border-neutral-200/80 text-[11px] font-mono shadow-2xs">
-              <label className="flex items-center gap-1 text-neutral-700 hover:text-black cursor-pointer font-medium">
-                <Upload size={12} />
-                <span>{t("Upload screenshot")}</span>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
-                  onChange={handleFileUpload}
-                  className="sr-only"
-                />
-              </label>
-              {customScreenshot && (
-                <button
-                  onClick={handleResetScreenshot}
-                  title={t("Reset to original")}
-                  aria-label={t("Reset project cover")}
-                  className="ml-1 text-neutral-400 hover:text-red-600 transition-colors"
-                >
-                  <RotateCcw size={11} />
-                </button>
-              )}
-            </div>
           </div>
-          <p role="status" className="mb-3 text-xs text-neutral-600">{t(upload.busy ? 'Processing image…' : upload.error)}</p>
 
           {/* Meta & Title */}
           <div className="mb-6">

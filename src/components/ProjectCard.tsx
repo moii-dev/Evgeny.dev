@@ -5,12 +5,11 @@ import { Project } from '../types/project';
 import { ProjectCover } from './ProjectCover';
 
 interface Props {
-  customScreenshotUrl?: string;
   project: Project;
   onSelect: (project: Project) => void;
 }
 
-export const ProjectCard: React.FC<Props> = ({ project, onSelect, customScreenshotUrl }) => {
+export const ProjectCard: React.FC<Props> = ({ project, onSelect }) => {
   return (
     <div
       data-cursor="view"
@@ -19,7 +18,7 @@ export const ProjectCard: React.FC<Props> = ({ project, onSelect, customScreensh
     >
       {/* Top Preview Canvas with Minimal Product Showcase */}
       <div className="relative w-full overflow-hidden rounded-[20px] sm:rounded-[24px] border border-neutral-200/70 bg-[#eceef1] transition-all duration-500 ease-out">
-        <ProjectCover project={project} size="card" customScreenshotUrl={customScreenshotUrl} />
+        <ProjectCover project={project} size="card" />
       </div>
 
       {/* Bottom Content Area matching Reference */}

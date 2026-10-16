@@ -6,13 +6,11 @@ import { assetUrl } from '../utils/urls';
 interface ProjectCoverProps {
   project: Project;
   size?: 'card' | 'modal' | 'compact';
-  customScreenshotUrl?: string;
 }
 
 export const ProjectCover: React.FC<ProjectCoverProps> = ({
   project,
   size = 'card',
-  customScreenshotUrl,
 }) => {
   const [failedSource, setFailedSource] = useState<string | null>(null);
 
@@ -23,8 +21,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
     caption: project.description,
   };
 
-  const customImage = customScreenshotUrl ? assetUrl(customScreenshotUrl) : undefined;
-  const effectivePrimaryImage = customImage || (cover.primaryImage ? assetUrl(cover.primaryImage) : undefined);
+  const effectivePrimaryImage = cover.primaryImage ? assetUrl(cover.primaryImage) : undefined;
   const imageError = failedSource === effectivePrimaryImage;
   const isModal = size === 'modal';
   const isCompact = size === 'compact';
@@ -34,12 +31,6 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
     : isCompact
     ? 'min-h-[160px]'
     : 'min-h-[270px] sm:min-h-[310px]';
-
-  if (customImage && !imageError) {
-    return <div className={`relative w-full ${containerHeight} bg-gradient-to-br from-[#f5f6f8] via-[#eceef2] to-[#e2e5eb] flex items-center justify-center p-5 sm:p-7`}>
-      <img src={customImage} alt={t('{title} custom cover', { title: project.title })} onError={() => setFailedSource(customImage)} className="w-full max-h-[310px] object-contain rounded-2xl" />
-    </div>;
-  }
 
   // -------------------------------------------------------------
   // 1. FRECHAT: FLAGSHIP ANDROID AI ASSISTANT & CLOUD ROUTING
@@ -115,7 +106,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <div className="relative w-full rounded-2xl overflow-hidden border border-neutral-300/80 shadow-[0_16px_40px_rgba(15,23,42,0.12),0_2px_8px_rgba(0,0,0,0.04)] bg-slate-950 transition-all duration-500 ease-out group-hover:scale-[1.025] group-hover:shadow-[0_22px_48px_rgba(15,23,42,0.18)]">
             <img
               src={effectivePrimaryImage}
-              srcSet={!customScreenshotUrl ? `${assetUrl('/assets/projects/worldbox/world-menu-background-480.webp')} 480w, ${assetUrl('/assets/projects/worldbox/world-menu-background-960.webp')} 960w, ${effectivePrimaryImage} 1672w` : undefined}
+              srcSet={`${assetUrl('/assets/projects/worldbox/world-menu-background-480.webp')} 480w, ${assetUrl('/assets/projects/worldbox/world-menu-background-960.webp')} 960w, ${effectivePrimaryImage} 1672w`}
               sizes="(min-width: 768px) 480px, calc(100vw - 80px)"
               alt={t("WorldBox-React Procedural Generation Screenshot")}
               loading="lazy"

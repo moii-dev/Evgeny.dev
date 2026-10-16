@@ -13,19 +13,13 @@ import { TECH_STACK } from './data/techStack';
 import { fetchGitHubRepos, type GitHubResult } from './services/githubService';
 import { Project } from './types/project';
 import { scrollToSection } from './utils/scrollController';
-import { readPortrait, savePortrait } from './utils/portrait';
-import { useProjectCovers } from './hooks/useProjectCovers';
 import { FeatureBoundary } from './components/FeatureBoundary';
 import { CustomCursor } from './components/CustomCursor';
 
 const ProjectModal = lazy(() => import('./components/ProjectModal').then(module => ({ default: module.ProjectModal })));
 const AllProjectsModal = lazy(() => import('./components/AllProjectsModal').then(module => ({ default: module.AllProjectsModal })));
-const PhotoChangeModal = lazy(() => import('./components/PhotoChangeModal').then(module => ({ default: module.PhotoChangeModal })));
 const ScrollNavigationHUD = lazy(() => import('./components/scroll-navigation/ScrollNavigationHUD').then(module => ({ default: module.ScrollNavigationHUD })));
 
-// Personal portrait bundled with the site.
-const DEFAULT_PORTRAIT_URL = `${import.meta.env.BASE_URL}assets/my-photo.webp`;
-const GITHUB_AVATAR_URL = 'https://avatars.githubusercontent.com/u/140349762?v=4';
 const DEFAULT_EMAIL = 'hnansaed71@gmail.com';
 
 export default function App() {
@@ -43,13 +37,6 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [allProjectsOpen, setAllProjectsOpen] = useState(false);
   const [catalogMounted, setCatalogMounted] = useState(false);
-  const [photoModalOpen, setPhotoModalOpen] = useState(false);
-
-  // Photo customization state with localStorage persistence
-  const [portrait, setPortrait] = useState(() => readPortrait(DEFAULT_PORTRAIT_URL));
-  const [storageWarning, setStorageWarning] = useState('');
-  const { url: photoUrl, monochrome: isMonochrome } = portrait;
-  const { covers, saveCover } = useProjectCovers(projects, saved => setStorageWarning(saved ? '' : 'Cover applied for this visit. Browser storage is unavailable or full; changes will not survive a reload.'));
 
   const loadGitHub = useCallback(async (force: boolean) => {
     githubRequest.current?.abort();
@@ -68,16 +55,6 @@ export default function App() {
   }, [loadGitHub]);
   const handleRefreshGitHub = () => { void loadGitHub(true); };
 
-  const handleSavePhoto = (newUrl: string, monochrome: boolean) => {
-    const next = { url: newUrl, monochrome };
-    setPortrait(next);
-    setStorageWarning(savePortrait(next) ? '' : 'Photo applied for this visit. Browser storage is unavailable or full; changes will not survive a reload.');
-  };
-
-  const handleResetPhoto = () => {
-    handleSavePhoto(DEFAULT_PORTRAIT_URL, true);
-  };
-
   const handleScrollTo = (id: string) => {
     scrollToSection(id);
   };
@@ -89,16 +66,11 @@ export default function App() {
 
       {/* Header */}
       <Header onOpenContact={() => handleScrollTo('contact')} />
-      {storageWarning && <p role="status" className="fixed bottom-4 left-4 right-4 z-[80] max-w-lg rounded-xl border border-neutral-300 bg-white p-3 text-xs shadow-lg">{t(storageWarning)}<button className="ml-3 underline" onClick={() => setStorageWarning('')}>{t("Dismiss")}</button></p>}
 
       {/* Main Content */}
       <main>
         {/* Hero Section */}
         <Hero
-          defaultPhoto={DEFAULT_PORTRAIT_URL}
-          photoUrl={photoUrl}
-          isMonochrome={isMonochrome}
-          onOpenPhotoChange={() => setPhotoModalOpen(true)}
           onOpenProjects={() => scrollToSection('projects')}
           onOpenAbout={() => scrollToSection('about')}
           projectCount={projects.length}
@@ -111,7 +83,6 @@ export default function App() {
         {/* 01 / SELECTED WORK - Featured Projects */}
         <ProjectsSection
           githubNotice={githubNotice}
-          covers={covers}
           projects={projects}
           onSelectProject={(project) => setSelectedProject(project)}
           onOpenAllProjects={() => { setCatalogMounted(true); setAllProjectsOpen(true); }}
@@ -137,8 +108,6 @@ export default function App() {
       {selectedProject && <FeatureBoundary label={t("Project details")} onDismiss={() => setSelectedProject(null)}><Suspense fallback={<span className="sr-only" role="status">{t("Loading dialog…")}</span>}><ProjectModal
         key={selectedProject?.id || 'closed'}
         project={selectedProject}
-        customScreenshot={selectedProject ? covers[selectedProject.id] || null : null}
-        onChangeCover={value => { if (selectedProject) saveCover(selectedProject.id, value); }}
         onClose={() => setSelectedProject(null)}
       /></Suspense></FeatureBoundary>}
 
@@ -155,17 +124,6 @@ export default function App() {
         isLoading={isLoading}
       /></Suspense></FeatureBoundary>}
 
-      {/* Photo Customization Modal */}
-      {photoModalOpen && <FeatureBoundary label={t("Portrait editor")} onDismiss={() => setPhotoModalOpen(false)}><Suspense fallback={<span className="sr-only" role="status">{t("Loading editor…")}</span>}><PhotoChangeModal
-        isOpen={photoModalOpen}
-        onClose={() => setPhotoModalOpen(false)}
-        currentPhoto={photoUrl}
-        isMonochrome={isMonochrome}
-        onSavePhoto={handleSavePhoto}
-        onReset={handleResetPhoto}
-        defaultPhoto={DEFAULT_PORTRAIT_URL}
-        githubAvatar={GITHUB_AVATAR_URL}
-      /></Suspense></FeatureBoundary>}
     </div>
   );
 }
