@@ -17,9 +17,8 @@ import { Project } from './types/project';
 import { ScrollNavigationHUD } from './components/scroll-navigation/ScrollNavigationHUD';
 import { scrollToSection } from './hooks/useScrollNavigation';
 
-// Default aesthetic editorial portrait matching reference composition
-const DEFAULT_PORTRAIT_URL =
-  'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=1200&q=85';
+// Personal portrait bundled with the site.
+const DEFAULT_PORTRAIT_URL = `${import.meta.env.BASE_URL}assets/my-photo.png`;
 const GITHUB_AVATAR_URL = 'https://avatars.githubusercontent.com/u/140349762?v=4';
 const DEFAULT_EMAIL = 'hnansaed71@gmail.com';
 
