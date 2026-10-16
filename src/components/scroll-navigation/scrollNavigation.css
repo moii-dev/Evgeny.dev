@@ -58,22 +58,6 @@
   user-select: none;
 }
 
-.hud-debug-path {
-  stroke: rgba(17, 17, 17, 0.7);
-  stroke-width: 1.5px;
-  stroke-dasharray: 3 3;
-  fill: none;
-}
-
-.hud-debug-handle {
-  stroke: rgba(17, 17, 17, 0.2);
-  stroke-width: 1px;
-}
-
-.hud-debug-point {
-  fill: #111111;
-}
-
 @media (max-width: 767px) {
   .hud-panel {
     right: 10px;

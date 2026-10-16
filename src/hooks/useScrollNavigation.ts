@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, type RefObject } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -18,7 +18,6 @@ export function useScrollNavigation(
   const [geometry, setGeometry] = useState(() => computePathGeometry(window.innerWidth, window.innerHeight));
   const [activeSection, setActiveSection] = useState(NAVIGATION_SECTIONS[0]);
   const [layoutVersion, setLayoutVersion] = useState(0);
-  const [debugMode, setDebugMode] = useState(false);
   const reducedMotion = usePrefersReducedMotion();
   const resizeFrame = useRef(0);
 
@@ -27,12 +26,7 @@ export function useScrollNavigation(
       cancelAnimationFrame(resizeFrame.current);
       resizeFrame.current = requestAnimationFrame(() => setGeometry(computePathGeometry(window.innerWidth, window.innerHeight)));
     };
-    const keyDown = (event: KeyboardEvent) => {
-      if (event.target instanceof HTMLElement && (event.target.isContentEditable || event.target.closest('input, textarea, dialog'))) return;
-      if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key.toLowerCase() === 'd') setDebugMode(previous => !previous);
-    };
     window.addEventListener('resize', resize, { passive: true });
-    window.addEventListener('keydown', keyDown);
     let frame = 0;
     let disposed = false;
     const refreshLayout = () => {
@@ -49,7 +43,7 @@ export function useScrollNavigation(
     void document.fonts.ready.then(refreshLayout);
     return () => {
       disposed = true; observer.disconnect(); cancelAnimationFrame(frame); cancelAnimationFrame(resizeFrame.current);
-      window.removeEventListener('resize', resize); window.removeEventListener('keydown', keyDown);
+      window.removeEventListener('resize', resize);
     };
   }, []);
 
@@ -114,7 +108,6 @@ export function useScrollNavigation(
   }, [geometry, layoutVersion, reducedMotion, pathRef, rulerRef]);
 
   const activeIndex = NAVIGATION_SECTIONS.findIndex(section => section.id === activeSection.id);
-  const toggleDebug = useCallback(() => setDebugMode(previous => !previous), []);
   return { geometry, activeSection, visitedIds: NAVIGATION_SECTIONS.slice(0, activeIndex).map(section => section.id),
-    nextSection: NAVIGATION_SECTIONS[activeIndex + 1] || null, debugMode, toggleDebug, scrollToSection, reducedMotion };
+    nextSection: NAVIGATION_SECTIONS[activeIndex + 1] || null, scrollToSection, reducedMotion };
 }

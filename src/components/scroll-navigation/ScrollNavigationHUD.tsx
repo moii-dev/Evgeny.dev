@@ -16,8 +16,6 @@ export const ScrollNavigationHUD: React.FC = () => {
     activeSection,
     visitedIds,
     nextSection,
-    debugMode,
-    toggleDebug,
     scrollToSection,
     reducedMotion,
   } = useScrollNavigation(rulerRef, pathRef);
@@ -32,7 +30,6 @@ export const ScrollNavigationHUD: React.FC = () => {
       <CharacterMotionPath
         ref={pathRef}
         geometry={geometry}
-        debugMode={debugMode}
       />
 
       <div className="fixed inset-0 pointer-events-none z-50 overflow-visible" aria-hidden="true">
@@ -100,19 +97,6 @@ export const ScrollNavigationHUD: React.FC = () => {
         </div>
       </nav>
 
-      <div className="fixed bottom-3 left-4 z-50 pointer-events-auto hidden sm:block">
-        <button
-          onClick={toggleDebug}
-          className={`px-2 py-1 rounded text-[10px] font-mono tracking-wider transition-colors border cursor-pointer ${
-            debugMode
-              ? 'bg-[#111111] text-white border-[#111111]'
-              : 'bg-white/80 backdrop-blur-sm text-[#929292] border-neutral-200/80 hover:text-[#111111] hover:border-neutral-400'
-          }`}
-          title="Toggle SVG Motion-Path Debug Visualization (or press 'D')"
-        >
-          {debugMode ? 'HUD PATH: VISIBLE' : 'HUD PATH: [D]'}
-        </button>
-      </div>
     </div>
   );
 };
