@@ -24,12 +24,12 @@ export const CONTACT_CONFIG: ContactConfig = {
   },
   socialLinks: {
     github: 'https://github.com/moii-dev',
-    telegram: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_TELEGRAM_URL) || 'https://t.me/evgeny_dev',
-    email: 'hnansaed71@gmail.com',
+    telegram: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_TELEGRAM_URL) || 'https://t.me/moii_telega',
+    email: 'eugene.oshepkov.work@gmail.com',
   },
   form: {
     endpoint: (typeof import.meta !== 'undefined' && import.meta.env?.VITE_CONTACT_FORM_ENDPOINT) || '',
-    fallbackEmail: 'hnansaed71@gmail.com',
+    fallbackEmail: 'eugene.oshepkov.work@gmail.com',
     defaultSubject: 'New Inquiry via Evgeny.dev',
   },
 };

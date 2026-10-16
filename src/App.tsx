@@ -15,12 +15,13 @@ import { Project } from './types/project';
 import { scrollToSection } from './utils/scrollController';
 import { FeatureBoundary } from './components/FeatureBoundary';
 import { CustomCursor } from './components/CustomCursor';
+import { CONTACT_CONFIG } from './config/contactConfig';
 
 const ProjectModal = lazy(() => import('./components/ProjectModal').then(module => ({ default: module.ProjectModal })));
 const AllProjectsModal = lazy(() => import('./components/AllProjectsModal').then(module => ({ default: module.AllProjectsModal })));
 const ScrollNavigationHUD = lazy(() => import('./components/scroll-navigation/ScrollNavigationHUD').then(module => ({ default: module.ScrollNavigationHUD })));
 
-const DEFAULT_EMAIL = 'hnansaed71@gmail.com';
+const DEFAULT_EMAIL = CONTACT_CONFIG.socialLinks.email;
 
 export default function App() {
   useLocale();
