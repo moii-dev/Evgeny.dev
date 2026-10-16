@@ -12,6 +12,7 @@ interface Props {
 export const ProjectCard: React.FC<Props> = ({ project, onSelect, customScreenshotUrl }) => {
   return (
     <div
+      data-cursor="view"
       onClick={() => onSelect(project)}
       className="group relative bg-[#f6f6f6] rounded-[28px] sm:rounded-[32px] p-3 sm:p-4 border border-neutral-200/80 hover:border-neutral-300 transition-all duration-300 flex flex-col justify-between cursor-pointer hover:shadow-xl"
     >

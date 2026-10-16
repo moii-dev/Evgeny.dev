@@ -280,6 +280,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
             {/* Start a conversation button */}
             <button
               onClick={handleStartConversation}
+              data-magnetic
               className="px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-white hover:bg-neutral-100 text-black text-xs sm:text-sm font-semibold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-md flex items-center gap-2 group/btn cursor-pointer"
             >
               <span>Start a conversation</span>

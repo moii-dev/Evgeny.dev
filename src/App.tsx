@@ -15,6 +15,7 @@ import { scrollToSection } from './utils/scrollController';
 import { readPortrait, savePortrait } from './utils/portrait';
 import { useProjectCovers } from './hooks/useProjectCovers';
 import { FeatureBoundary } from './components/FeatureBoundary';
+import { CustomCursor } from './components/CustomCursor';
 
 const ProjectModal = lazy(() => import('./components/ProjectModal').then(module => ({ default: module.ProjectModal })));
 const AllProjectsModal = lazy(() => import('./components/AllProjectsModal').then(module => ({ default: module.AllProjectsModal })));
@@ -81,6 +82,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fafaf9] text-[#111111] font-sans subtle-grain">
+      <FeatureBoundary label="Custom cursor"><CustomCursor /></FeatureBoundary>
       <FeatureBoundary label="Section animation"><Suspense fallback={null}><ScrollNavigationHUD /></Suspense></FeatureBoundary>
 
       {/* Header */}

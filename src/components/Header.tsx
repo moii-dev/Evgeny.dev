@@ -110,6 +110,7 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
         <div className="hidden md:flex items-center gap-3">
           <button
             onClick={onOpenContact}
+            data-magnetic
             className="px-5 py-2 rounded-full bg-black hover:bg-neutral-800 text-white text-[13px] font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm flex items-center gap-1.5"
           >
             <span>Let's talk</span>

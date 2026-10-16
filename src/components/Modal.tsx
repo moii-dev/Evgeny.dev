@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { lockPageScroll } from '../utils/scrollController';
+import { registerModalLayer } from '../utils/modalLayers';
 
 interface Props {
   isOpen: boolean;
@@ -17,7 +18,8 @@ export function Modal({ isOpen, onClose, label, children }: Props) {
     if (!isOpen || !dialog) return;
     const unlock = lockPageScroll();
     dialog.showModal();
-    return () => { dialog.close(); unlock(); };
+    const unregister = registerModalLayer(dialog);
+    return () => { unregister(); dialog.close(); unlock(); };
   }, [isOpen]);
 
   return (

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Camera } from 'lucide-react';
 import { assetUrl } from '../utils/urls';
+import { HeroBackground } from './HeroBackground';
 
 interface Props {
   photoUrl: string;
@@ -24,12 +25,25 @@ export const Hero: React.FC<Props> = ({
   techCount,
 }) => {
   const [failedSource, setFailedSource] = useState('');
+  const [mousePos, setMousePos] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+  const handleMouseLeave = useCallback(() => setMousePos({ x: null, y: null }), []);
   const src = failedSource === photoUrl ? defaultPhoto : assetUrl(photoUrl);
   const portraitSrcSet = src === defaultPhoto ? `${import.meta.env.BASE_URL}assets/my-photo-640.webp 640w, ${import.meta.env.BASE_URL}assets/my-photo-960.webp 960w, ${defaultPhoto} 1098w` : undefined;
   return (
     <section id="home" className="pt-24 sm:pt-28 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Huge Light-Gray Rounded Container matching Reference */}
-      <div className="relative bg-[#ebebec] border border-neutral-300/70 rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-xs">
+      <div
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="relative bg-[#ebebec] border border-neutral-300/70 rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-xs"
+      >
+        <HeroBackground mouseX={mousePos.x} mouseY={mousePos.y} />
         <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch min-h-[560px] lg:min-h-[620px]">
           
           {/* Left Column: Editorial Headline & Copy & Stats */}
@@ -52,12 +66,14 @@ export const Hero: React.FC<Props> = ({
               <div className="flex flex-wrap items-center gap-3.5 mb-12">
                 <button
                   onClick={onOpenProjects}
+                  data-magnetic
                   className="px-6 py-3 rounded-full bg-neutral-950 hover:bg-black text-white text-sm font-medium transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-sm"
                 >
                   Explore projects
                 </button>
                 <button
                   onClick={onOpenAbout}
+                  data-magnetic
                   className="px-6 py-3 rounded-full bg-[#dedede] hover:bg-[#d4d4d4] text-neutral-900 text-sm font-medium transition-all duration-200 border border-neutral-300/40"
                 >
                   About me
