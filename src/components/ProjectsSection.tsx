@@ -5,6 +5,8 @@ import { ProjectCard } from './ProjectCard';
 import { FEATURED_PROJECTS } from '../data/featuredProjects';
 
 interface Props {
+  githubNotice: string;
+  covers: Record<string, string | null>;
   projects: Project[];
   onSelectProject: (project: Project) => void;
   onOpenAllProjects: () => void;
@@ -14,6 +16,8 @@ interface Props {
 }
 
 export const ProjectsSection: React.FC<Props> = ({
+  githubNotice,
+  covers,
   projects,
   onSelectProject,
   onOpenAllProjects,
@@ -79,9 +83,11 @@ export const ProjectsSection: React.FC<Props> = ({
       </div>
 
       {/* 2-Column Grid with 4 Curated Project Cards */}
+      <p role="status" className="mb-5 max-w-3xl text-xs text-neutral-500">{githubNotice}</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {displayedProjects.map((project) => (
           <ProjectCard
+            customScreenshotUrl={covers[project.id] || undefined}
             key={project.id}
             project={project}
             onSelect={onSelectProject}

@@ -61,7 +61,6 @@ export const FEATURED_PROJECTS: Project[] = [
       'Комплексный симулятор цивилизаций и процедурной экосистемы на React 19, TypeScript и HTML5 Canvas. Включает процедурную генерацию континентов, островов и архипелагов с воспроизводимыми сидами, симуляцию климатических зон, автономное население (профессии, старение, семьи), эволюцию королевств, дипломатию, торговлю, войну и божественные силы с частицами.',
     tags: ['React 19', 'TypeScript', 'HTML5 Canvas', 'Simulation Engine'],
     githubUrl: 'https://github.com/moii-dev/WorldBox-React',
-    demoUrl: 'https://github.com/moii-dev/WorldBox-React',
     stars: 0,
     language: 'TypeScript',
     featured: true,
@@ -69,7 +68,7 @@ export const FEATURED_PROJECTS: Project[] = [
     cover: {
       variant: 'single',
       backgroundTheme: 'slate',
-      primaryImage: '/assets/projects/worldbox/world-menu-background.png',
+      primaryImage: '/assets/projects/worldbox/world-menu-background.webp',
       badgeText: 'React 19 · Canvas · Procedural Gen',
       caption: 'Interactive 2D world sandbox simulator with procedural continent generation',
       altText: 'WorldBox-React 2D World Simulation Sandbox',
@@ -86,7 +85,6 @@ export const FEATURED_PROJECTS: Project[] = [
       'Figma-подобный независимый локально-ориентированный векторный редактор на React и TypeScript. Бесконечный холст с панорамированием и плавным масштабированием, трансформация объектов, векторное перо с кривыми Безье, маски, булевы операции над фигурами, интерактивные связи прототипов со Smart Animate и экспорт в SVG/PNG/JSON.',
     tags: ['TypeScript', 'React', 'HTML5 Canvas', 'Vector Math'],
     githubUrl: 'https://github.com/moii-dev/Figmint',
-    demoUrl: 'https://github.com/moii-dev/Figmint',
     stars: 0,
     language: 'TypeScript',
     featured: true,
@@ -117,7 +115,7 @@ export const FEATURED_PROJECTS: Project[] = [
     cover: {
       variant: 'single',
       backgroundTheme: 'warm-gray',
-      primaryImage: '/assets/projects/luma/build-luma-aura.png',
+      primaryImage: '/assets/projects/luma/build-luma-aura.webp',
       badgeText: 'Jetpack Compose · Room · Widgets',
       caption: 'Personal emotional rhythm tracker with dynamic Aura generation',
       altText: 'Luma Pulse Aura Android App',
@@ -191,8 +189,8 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     cover: {
       variant: 'single',
       backgroundTheme: 'neutral',
-      primaryImage: '/assets/projects/yandex-adblocker/banner.png',
-      badgeText: 'Chrome MV3 · 4 Stars',
+      primaryImage: '/assets/projects/yandex-adblocker/banner.webp',
+      badgeText: 'Chrome MV3 · Search Filter',
       caption: 'Zero-overhead search ad filter for Chromium browsers',
     },
   },
@@ -235,7 +233,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     cover: {
       variant: 'single',
       backgroundTheme: 'neutral',
-      logoUrl: '/assets/projects/gamma-cleaner/app_logo.png',
+      logoUrl: '/assets/projects/gamma-cleaner/app_logo.webp',
       badgeText: '.NET · Python · OpenXML',
       caption: 'PPTX & PDF document watermark cleaner',
     },
@@ -257,7 +255,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     cover: {
       variant: 'single',
       backgroundTheme: 'neutral',
-      primaryImage: '/assets/projects/block-yandex-game/logo.png',
+      primaryImage: '/assets/projects/block-yandex-game/logo.webp',
       badgeText: 'Chrome MV3 · declarativeNetRequest',
       caption: 'Lightweight web navigation filter',
     },
@@ -323,7 +321,7 @@ export const ALL_LOCAL_PROJECTS: Project[] = [
     cover: {
       variant: 'single',
       backgroundTheme: 'slate',
-      primaryImage: '/assets/projects/multipulti/screenshot.png',
+      primaryImage: '/assets/projects/multipulti/screenshot.webp',
       logoUrl: '/assets/projects/multipulti/logo.png',
       badgeText: 'Canvas · Frame-by-Frame',
     },

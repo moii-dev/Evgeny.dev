@@ -49,12 +49,3 @@ export const NAVIGATION_SECTIONS: NavigationSection[] = [
     kicker: 'GET IN TOUCH',
   },
 ];
-
-export const HUD_COLORS = {
-  primaryText: '#111111',
-  secondaryText: '#929292',
-  tertiaryText: '#b5b5b5',
-  lineColor: 'rgba(0, 0, 0, 0.10)',
-  lineActive: '#111111',
-  pathDebug: 'rgba(17, 17, 17, 0.65)',
-};

@@ -1,6 +1,9 @@
+import { usePrefersReducedMotion as useReducedMotion } from '../hooks/usePrefersReducedMotion';
 import React, { useState, useRef } from 'react';
 import { ArrowUpRight, MapPin } from 'lucide-react';
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from 'motion/react';
+import { motion, useScroll, useTransform, type Variants } from 'motion/react';
+import { Modal } from './Modal';
+import { scrollToSection } from '../utils/scrollController';
 import {
   WorkspaceVisual,
   MountainVisual,
@@ -38,10 +41,7 @@ export const AboutSection: React.FC = () => {
   );
 
   const scrollToContact = () => {
-    const el = document.getElementById('contact');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToSection('contact');
   };
 
   const containerVariants: Variants = {
@@ -411,9 +411,8 @@ export const AboutSection: React.FC = () => {
 
       {/* Lightweight Accessible Modal for Card 2 & Card 5 interactive buttons */}
       {modalContent && (
+        <Modal isOpen onClose={() => setModalContent(null)} label="About Evgeny">
         <div
-          role="dialog"
-          aria-modal="true"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-fade-in"
           onClick={() => setModalContent(null)}
         >
@@ -437,6 +436,7 @@ export const AboutSection: React.FC = () => {
             </div>
           </div>
         </div>
+        </Modal>
       )}
     </section>
   );

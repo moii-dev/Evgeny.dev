@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { NAVIGATION_SECTIONS, NavigationSection } from '../../config/navigationSections';
+import { NAVIGATION_SECTIONS } from '../../config/navigationSections';
 
 export interface ScrollProgressRulerHandle {
   updateProgress: (progress: number) => void;
@@ -17,12 +17,14 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
     const trackRef = useRef<HTMLDivElement>(null);
     const needleRef = useRef<HTMLDivElement>(null);
     const percentTextRef = useRef<HTMLSpanElement>(null);
+    const progressRef = useRef<HTMLDivElement>(null);
 
     const railHeight = isMobile ? 160 : 200;
 
     useImperativeHandle(ref, () => ({
       updateProgress: (progress: number) => {
         const clamped = Math.max(0, Math.min(1, progress));
+        progressRef.current?.setAttribute('aria-valuenow', String(Math.round(clamped * 100)));
         const yPos = clamped * railHeight;
 
         if (needleRef.current) {
@@ -54,9 +56,6 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
           onClick={handleTrackClick}
           style={{ height: `${railHeight}px` }}
           className="relative w-6 flex justify-center cursor-pointer hud-interactive group"
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={100}
         >
           <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[1px] bg-black/10 group-hover:bg-black/25 transition-colors" />
 
@@ -86,6 +85,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
                   }}
                   className="relative p-1.5 flex items-center justify-center cursor-pointer transition-transform duration-150 hover:scale-125 focus:outline-none"
                   aria-label={`Go to section ${sec.label}`}
+                  aria-current={isActive ? 'location' : undefined}
                 >
                   <span
                     style={{ backgroundColor: markerColor }}
@@ -107,7 +107,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
             className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none z-10 will-change-transform"
             style={{ transform: 'translateY(0px)' }}
           >
-            <div className="w-2.5 h-[1.5px] bg-[#111111] -translate-x-1/2 rounded-xs" />
+            <div ref={progressRef} role="progressbar" aria-label="Page scroll progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={0} className="w-2.5 h-[1.5px] bg-[#111111] -translate-x-1/2 rounded-xs" />
           </div>
         </div>
 
@@ -115,7 +115,7 @@ export const ScrollProgressRuler = forwardRef<ScrollProgressRulerHandle, Props>(
           <span
             ref={percentTextRef}
             className="font-mono text-[10px] font-medium tracking-tight text-[#111111] tabular-nums"
-            aria-live="polite"
+            aria-hidden="true"
           >
             00%
           </span>

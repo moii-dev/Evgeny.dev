@@ -1,4 +1,27 @@
-@import "tailwindcss";
+@import "tailwindcss" source("./");
+@source "../index.html";
+
+.app-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  overflow: hidden;
+}
+.app-dialog::backdrop { background: transparent; }
+
+:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
 
 @theme {
   --font-serif: "Instrument Serif", "Newsreader", Georgia, serif;

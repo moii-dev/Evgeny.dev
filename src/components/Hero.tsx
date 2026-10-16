@@ -1,27 +1,31 @@
-import React from 'react';
-import { ArrowUpRight, Camera } from 'lucide-react';
+import React, { useState } from 'react';
+import { Camera } from 'lucide-react';
+import { assetUrl } from '../utils/urls';
 
 interface Props {
   photoUrl: string;
+  defaultPhoto: string;
   isMonochrome: boolean;
   onOpenPhotoChange: () => void;
   onOpenProjects: () => void;
   onOpenAbout: () => void;
-  onOpenContact: () => void;
   projectCount: number;
   techCount: number;
 }
 
 export const Hero: React.FC<Props> = ({
   photoUrl,
+  defaultPhoto,
   isMonochrome,
   onOpenPhotoChange,
   onOpenProjects,
   onOpenAbout,
-  onOpenContact,
   projectCount,
   techCount,
 }) => {
+  const [failedSource, setFailedSource] = useState('');
+  const src = failedSource === photoUrl ? defaultPhoto : assetUrl(photoUrl);
+  const portraitSrcSet = src === defaultPhoto ? `${import.meta.env.BASE_URL}assets/my-photo-640.webp 640w, ${import.meta.env.BASE_URL}assets/my-photo-960.webp 960w, ${defaultPhoto} 1098w` : undefined;
   return (
     <section id="home" className="pt-24 sm:pt-28 pb-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       {/* Huge Light-Gray Rounded Container matching Reference */}
@@ -96,7 +100,14 @@ export const Hero: React.FC<Props> = ({
           <div className="lg:col-span-5 relative min-h-[380px] lg:min-h-full flex items-end justify-center overflow-hidden bg-[#e0e0e0]">
             {/* Developer Portrait Image */}
             <img
-              src={photoUrl}
+              src={src}
+              srcSet={portraitSrcSet}
+              sizes="(min-width: 1280px) 500px, (min-width: 1024px) 42vw, 100vw"
+              width={1098}
+              height={1433}
+              fetchPriority="high"
+              decoding="async"
+              onError={() => setFailedSource(photoUrl)}
               alt="Evgeny - Developer Portrait"
               className={`w-full h-full object-cover object-top transition-all duration-700 ${
                 isMonochrome ? 'grayscale contrast-105 brightness-95' : ''

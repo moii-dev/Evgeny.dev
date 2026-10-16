@@ -4,11 +4,12 @@ import { Project } from '../types/project';
 import { ProjectCover } from './ProjectCover';
 
 interface Props {
+  customScreenshotUrl?: string;
   project: Project;
   onSelect: (project: Project) => void;
 }
 
-export const ProjectCard: React.FC<Props> = ({ project, onSelect }) => {
+export const ProjectCard: React.FC<Props> = ({ project, onSelect, customScreenshotUrl }) => {
   return (
     <div
       onClick={() => onSelect(project)}
@@ -16,7 +17,7 @@ export const ProjectCard: React.FC<Props> = ({ project, onSelect }) => {
     >
       {/* Top Preview Canvas with Minimal Product Showcase */}
       <div className="relative w-full overflow-hidden rounded-[20px] sm:rounded-[24px] border border-neutral-200/70 bg-[#eceef1] transition-all duration-500 ease-out">
-        <ProjectCover project={project} size="card" />
+        <ProjectCover project={project} size="card" customScreenshotUrl={customScreenshotUrl} />
       </div>
 
       {/* Bottom Content Area matching Reference */}

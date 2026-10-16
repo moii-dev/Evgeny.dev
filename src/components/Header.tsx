@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
-import { scrollToSection } from '../hooks/useScrollNavigation';
+import { scrollToSection } from '../utils/scrollController';
 
 interface Props {
   onOpenContact: () => void;
@@ -29,6 +29,7 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -127,6 +128,8 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-xl text-neutral-800 hover:bg-neutral-100 transition-colors"
             aria-label="Toggle Navigation Menu"
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -136,7 +139,7 @@ export const Header: React.FC<Props> = ({ onOpenContact }) => {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-xl border-b border-neutral-200 px-6 py-6 shadow-xl animate-fade-in">
-          <nav className="flex flex-col space-y-4 text-sm font-medium text-neutral-700">
+          <nav id="mobile-navigation" className="flex flex-col space-y-4 text-sm font-medium text-neutral-700">
             {navItems.map((item) => (
               <a
                 key={item.label}

@@ -33,11 +33,13 @@
 .hud-next-slot {
   margin-top: 12px;
   min-height: 20px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: flex-end;
   pointer-events: auto;
 }
+
+@media (min-width: 640px) { .hud-next-slot { display: flex; } }
 
 .hud-char-transit {
   position: fixed;

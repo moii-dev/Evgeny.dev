@@ -1,11 +1,8 @@
+import { usePrefersReducedMotion as useReducedMotion } from '../../hooks/usePrefersReducedMotion';
 import React from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 
-interface Props {
-  scrollYProgress?: any;
-}
-
-export const SphericalVisual: React.FC<Props> = () => {
+export const SphericalVisual: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -23,9 +20,9 @@ export const SphericalVisual: React.FC<Props> = () => {
         xmlns="http://www.w3.org/2000/svg"
         className="absolute right-[-10%] top-[-10%] w-[120%] h-[120%] object-cover"
         preserveAspectRatio="xMidYMid slice"
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, ease: 'easeOut' }}
+        transition={{ duration: shouldReduceMotion ? 0 : 1.2, ease: 'easeOut' }}
       >
         <defs>
           {/* Subtle grain/noise filter */}

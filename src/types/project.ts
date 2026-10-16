@@ -29,7 +29,6 @@ export interface Project {
   featured: boolean;
   language?: string;
   cover?: ProjectCoverConfig;
-  mockupType?: 'freechat' | 'vkapibara' | 'everus' | 'focuslock' | 'generic';
 }
 
 export interface GitHubRepo {

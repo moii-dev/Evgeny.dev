@@ -1,8 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { ArrowUpRight, Check, Send, Github, Mail, Loader2, AlertCircle } from 'lucide-react';
-import { motion, useReducedMotion, useScroll, useTransform, type Variants } from 'motion/react';
+import { usePrefersReducedMotion as useReducedMotion } from '../hooks/usePrefersReducedMotion';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowUpRight, Check, Github, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { motion, useScroll, useTransform, type Variants } from 'motion/react';
 import { SphericalVisual } from './contact/SphericalVisual';
 import { CONTACT_CONFIG } from '../config/contactConfig';
+import { withDeadline } from '../utils/request';
+import { scrollToElement } from '../utils/scrollController';
 
 interface Props {
   email?: string;
@@ -23,6 +26,14 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'fallback' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormHighlighted, setIsFormHighlighted] = useState(false);
+  const requestRef = useRef<AbortController | null>(null);
+  const highlightTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const focusTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => {
+    requestRef.current?.abort();
+    if (highlightTimeout.current) clearTimeout(highlightTimeout.current);
+    if (focusTimeout.current) clearTimeout(focusTimeout.current);
+  }, []);
 
   // Parallax scroll on decorative spheres
   const { scrollYProgress } = useScroll({
@@ -39,19 +50,21 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
   // Focus and highlight form from "Start a conversation" button
   const handleStartConversation = () => {
     if (nameInputRef.current) {
-      nameInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      nameInputRef.current.focus();
+      scrollToElement(nameInputRef.current, true);
+      nameInputRef.current.focus({ preventScroll: true });
       setIsFormHighlighted(true);
-      setTimeout(() => setIsFormHighlighted(false), 1600);
+      if (highlightTimeout.current) clearTimeout(highlightTimeout.current);
+      highlightTimeout.current = setTimeout(() => setIsFormHighlighted(false), 1600);
     }
   };
 
   // Scroll smoothly down to the form
   const handleScrollToForm = () => {
     if (formCardRef.current) {
-      formCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      scrollToElement(formCardRef.current, true);
       if (nameInputRef.current) {
-        setTimeout(() => nameInputRef.current?.focus(), 400);
+        if (focusTimeout.current) clearTimeout(focusTimeout.current);
+        focusTimeout.current = setTimeout(() => nameInputRef.current?.focus(), 400);
       }
     }
   };
@@ -73,11 +86,14 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
       newErrors.message = 'Please write at least a few words (min 8 characters)';
     }
     setErrors(newErrors);
+    const first = Object.keys(newErrors)[0];
+    if (first) document.getElementById(`contact-${first}`)?.focus();
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (requestRef.current) return;
     if (!validate()) return;
 
     setIsSubmitting(true);
@@ -86,8 +102,11 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
     const endpoint = CONTACT_CONFIG.form.endpoint;
 
     if (endpoint) {
+      const controller = new AbortController();
+      requestRef.current = controller;
       try {
-        const response = await fetch(endpoint, {
+        const response = await withDeadline(signal => fetch(endpoint, {
+          signal,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -99,7 +118,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
             message: formMsg,
             source: 'Evgeny.dev Contact Form',
           }),
-        });
+        }), 12_000, controller.signal);
 
         if (response.ok) {
           setSubmitStatus('success');
@@ -110,18 +129,18 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
           setSubmitStatus('error');
           setErrorMessage('Could not send message via form endpoint. Please use direct email.');
         }
-      } catch {
+      } catch (error) {
+        if (controller.signal.aborted) return;
         setSubmitStatus('error');
-        setErrorMessage('Network error while sending. Please reach out via direct email.');
+        setErrorMessage(error instanceof Error && error.message.includes('timed out') ? error.message : 'Network error while sending. Please reach out via direct email.');
       } finally {
-        setIsSubmitting(false);
+        requestRef.current = null;
+        if (!controller.signal.aborted) setIsSubmitting(false);
       }
     } else {
       // No server endpoint configured: provide clear honest messaging and direct mailto delivery option
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setSubmitStatus('fallback');
-      }, 500);
+      setIsSubmitting(false);
+      setSubmitStatus('fallback');
     }
   };
 
@@ -306,7 +325,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                 <div className="w-10 h-10 rounded-full bg-black text-white mx-auto flex items-center justify-center">
                   <Check size={18} />
                 </div>
-                <h4 className="text-sm font-semibold text-neutral-900">Message sent successfully!</h4>
+                <h4 role="status" className="text-sm font-semibold text-neutral-900">Message sent successfully!</h4>
                 <p className="text-xs text-neutral-500 leading-relaxed">
                   Thank you for reaching out. I'll get back to you shortly.
                 </p>
@@ -325,7 +344,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
               <div className="p-5 sm:p-6 rounded-2xl bg-white border border-neutral-200 space-y-3 my-4 text-left">
                 <div className="flex items-center gap-2 text-neutral-900 font-semibold text-xs sm:text-sm">
                   <Mail size={16} />
-                  <span>Message ready to send</span>
+                  <span role="status">Message ready to send</span>
                 </div>
                 <p className="text-xs text-neutral-600 leading-relaxed">
                   Your inquiry has been formulated. Click below to deliver it directly to <strong className="font-semibold text-neutral-900">{email}</strong> via your email app.
@@ -341,7 +360,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                   </button>
                   <button
                     type="button"
-                    onClick={handleResetForm}
+                    onClick={() => { setSubmitStatus('idle'); setErrors({}); }}
                     className="w-full py-2 text-xs font-medium text-neutral-500 hover:text-neutral-800 cursor-pointer"
                   >
                     Edit message
@@ -352,7 +371,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
 
             {/* Error Message banner */}
             {submitStatus === 'error' && errorMessage && (
-              <div className="p-3.5 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
+              <div role="alert" className="p-3.5 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
                 <AlertCircle size={15} className="shrink-0" />
                 <span>{errorMessage}</span>
               </div>
@@ -361,6 +380,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
             {/* Active Form */}
             {submitStatus !== 'success' && submitStatus !== 'fallback' && (
               <form onSubmit={handleSubmit} noValidate className="space-y-4">
+                <p role="alert" className="sr-only">{Object.values(errors).filter(Boolean).join('. ')}</p>
                 {/* Field: Your name */}
                 <div>
                   <label htmlFor="contact-name" className="block text-xs font-medium text-neutral-700 mb-1.5">
@@ -369,6 +389,8 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                   <input
                     ref={nameInputRef}
                     id="contact-name"
+                    aria-invalid={Boolean(errors.name)}
+                    aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     type="text"
                     required
                     placeholder="How should I call you?"
@@ -385,7 +407,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     }`}
                   />
                   {errors.name && (
-                    <p className="mt-1 text-[11px] text-red-600 font-medium">{errors.name}</p>
+                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-name-error">{errors.name}</p>
                   )}
                 </div>
 
@@ -396,6 +418,8 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                   </label>
                   <input
                     id="contact-email"
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     type="email"
                     required
                     placeholder="you@example.com"
@@ -412,7 +436,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     }`}
                   />
                   {errors.email && (
-                    <p className="mt-1 text-[11px] text-red-600 font-medium">{errors.email}</p>
+                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-email-error">{errors.email}</p>
                   )}
                 </div>
 
@@ -423,6 +447,8 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                   </label>
                   <textarea
                     id="contact-message"
+                    aria-invalid={Boolean(errors.message)}
+                    aria-describedby={errors.message ? 'contact-message-error' : undefined}
                     rows={4}
                     required
                     placeholder="Tell me about your project..."
@@ -439,7 +465,7 @@ export const ContactSection: React.FC<Props> = ({ email = CONTACT_CONFIG.socialL
                     }`}
                   />
                   {errors.message && (
-                    <p className="mt-1 text-[11px] text-red-600 font-medium">{errors.message}</p>
+                    <p className="mt-1 text-[11px] text-red-600 font-medium" id="contact-message-error">{errors.message}</p>
                   )}
                 </div>
 

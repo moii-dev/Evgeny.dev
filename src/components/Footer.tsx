@@ -1,7 +1,8 @@
+import { usePrefersReducedMotion as useReducedMotion } from '../hooks/usePrefersReducedMotion';
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
-import { motion, useReducedMotion } from 'motion/react';
-import { scrollToSection } from '../hooks/useScrollNavigation';
+import { motion } from 'motion/react';
+import { scrollToSection } from '../utils/scrollController';
 
 export const Footer: React.FC = () => {
   const shouldReduceMotion = useReducedMotion();

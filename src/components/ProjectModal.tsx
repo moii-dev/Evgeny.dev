@@ -1,74 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { X, ExternalLink, Star, GitFork, Calendar, Code2, Upload, RotateCcw, Image as ImageIcon } from 'lucide-react';
+import React from 'react';
+import { X, ExternalLink, Star, GitFork, Calendar, Code2, Upload, RotateCcw } from 'lucide-react';
 import { Project } from '../types/project';
 import { ProjectCover } from './ProjectCover';
+import { Modal } from './Modal';
+import { useImageUpload } from '../hooks/useImageUpload';
+import { repositoryIdentity } from '../services/githubService';
 
 interface Props {
   project: Project | null;
   onClose: () => void;
+  customScreenshot: string | null;
+  onChangeCover: (value: string | null) => void;
 }
 
-export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
-  const [customScreenshot, setCustomScreenshot] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-
-  useEffect(() => {
-    if (project) {
-      try {
-        const saved = localStorage.getItem(`evgeny_project_cover_${project.id}`);
-        setCustomScreenshot(saved || null);
-      } catch {
-        // ignore
-      }
-    }
-  }, [project]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (project) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [project, onClose]);
+export const ProjectModal: React.FC<Props> = ({ project, onClose, customScreenshot, onChangeCover }) => {
+  const upload = useImageUpload(onChangeCover);
 
   if (!project) return null;
+  const isRepository = Boolean(repositoryIdentity(project.githubUrl));
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          setCustomScreenshot(reader.result);
-          try {
-            localStorage.setItem(`evgeny_project_cover_${project.id}`, reader.result);
-          } catch {
-            // ignore
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+    e.target.value = '';
+    if (file) void upload.file(file);
   };
 
   const handleResetScreenshot = () => {
-    setCustomScreenshot(null);
-    try {
-      localStorage.removeItem(`evgeny_project_cover_${project.id}`);
-    } catch {
-      // ignore
-    }
+    upload.cancel();
+    onChangeCover(null);
   };
 
   return (
+    <Modal isOpen={Boolean(project)} onClose={onClose} label={`${project.title} details`}>
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-3xl max-h-[90vh] bg-[#fbfbfb] rounded-[28px] sm:rounded-[36px] shadow-2xl border border-neutral-200 overflow-y-auto p-5 sm:p-8 flex flex-col justify-between">
+      <div className="relative w-full max-w-3xl max-h-[90dvh] bg-[#fbfbfb] rounded-[28px] sm:rounded-[36px] shadow-2xl border border-neutral-200 overflow-y-auto overscroll-contain p-5 sm:p-8 flex flex-col justify-between">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -94,15 +59,16 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
                 <span>Загрузить скриншот</span>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
                   onChange={handleFileUpload}
-                  className="hidden"
+                  className="sr-only"
                 />
               </label>
               {customScreenshot && (
                 <button
                   onClick={handleResetScreenshot}
                   title="Сбросить на оригинал"
+                  aria-label="Reset project cover"
                   className="ml-1 text-neutral-400 hover:text-red-600 transition-colors"
                 >
                   <RotateCcw size={11} />
@@ -110,6 +76,7 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
               )}
             </div>
           </div>
+          <p role="status" className="mb-3 text-xs text-neutral-600">{upload.busy ? 'Processing image…' : upload.error}</p>
 
           {/* Meta & Title */}
           <div className="mb-6">
@@ -170,7 +137,7 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
         {/* Action Buttons */}
         <div className="pt-4 border-t border-neutral-200/80 flex flex-wrap items-center justify-between gap-3">
           <div className="text-xs text-neutral-500">
-            Source repository on GitHub
+            {isRepository ? 'Source repository on GitHub' : 'Developer profile on GitHub'}
           </div>
 
           <div className="flex items-center gap-3">
@@ -199,5 +166,6 @@ export const ProjectModal: React.FC<Props> = ({ project, onClose }) => {
         </div>
       </div>
     </div>
+    </Modal>
   );
 };

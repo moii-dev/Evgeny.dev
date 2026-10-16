@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TECH_CATEGORIES, TECH_STACK, TechItem } from '../data/techStack';
+import { TECH_CATEGORIES, TECH_STACK } from '../data/techStack';
 import { Smartphone, Code, Server, Database, Wrench, CheckCircle2 } from 'lucide-react';
 
 export const StackSection: React.FC = () => {

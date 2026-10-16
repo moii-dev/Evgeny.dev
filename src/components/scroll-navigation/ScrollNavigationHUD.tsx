@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { motion } from 'motion/react';
 import { NAVIGATION_SECTIONS } from '../../config/navigationSections';
 import { splitCharacters } from '../../utils/splitCharacters';
 import { ScrollProgressRuler, ScrollProgressRulerHandle } from './ScrollProgressRuler';
@@ -18,6 +19,7 @@ export const ScrollNavigationHUD: React.FC = () => {
     debugMode,
     toggleDebug,
     scrollToSection,
+    reducedMotion,
   } = useScrollNavigation(rulerRef, pathRef);
 
   const isMobile = geometry.isMobile;
@@ -61,24 +63,13 @@ export const ScrollNavigationHUD: React.FC = () => {
         aria-label="Section shortcuts"
       >
         <div className="hud-active-slot">
-          {NAVIGATION_SECTIONS.map((sec) => {
-            const isActive = activeSection.id === sec.id;
-            return (
-              <button
-                key={sec.id}
-                data-active-header={sec.id}
-                onClick={() => scrollToSection(sec.id)}
-                className={`font-sans text-[13px] sm:text-sm font-semibold tracking-[-0.02em] text-[#111111] transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 -translate-y-2 pointer-events-none absolute'
-                }`}
-                aria-label={`Current section: ${sec.label}`}
-              >
-                <span>{sec.label}</span>
-              </button>
-            );
-          })}
+          <button data-active-header={activeSection.id} onClick={() => scrollToSection(activeSection.id)}
+            className="font-sans text-[13px] sm:text-sm font-semibold tracking-[-0.02em] text-[#111111] cursor-pointer"
+            aria-label={`Current section: ${activeSection.label}`} aria-current="location">
+            <motion.span key={activeSection.id} className="inline-block"
+              initial={reducedMotion ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reducedMotion ? 0 : 0.2 }}>{activeSection.label}</motion.span>
+          </button>
         </div>
 
         <ScrollProgressRuler

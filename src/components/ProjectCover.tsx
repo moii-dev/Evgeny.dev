@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Project, ProjectCoverConfig } from '../types/project';
+import { assetUrl } from '../utils/urls';
 
 interface ProjectCoverProps {
   project: Project;
   size?: 'card' | 'modal' | 'compact';
   customScreenshotUrl?: string;
-  onUploadRequest?: () => void;
 }
 
 export const ProjectCover: React.FC<ProjectCoverProps> = ({
@@ -13,20 +13,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
   size = 'card',
   customScreenshotUrl,
 }) => {
-  const [imageError, setImageError] = useState(false);
-  const [localCustomImage, setLocalCustomImage] = useState<string | null>(null);
-
-  // Check localStorage for user-uploaded custom screenshot
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(`evgeny_project_cover_${project.id}`);
-      if (saved) {
-        setLocalCustomImage(saved);
-      }
-    } catch {
-      // ignore
-    }
-  }, [project.id]);
+  const [failedSource, setFailedSource] = useState<string | null>(null);
 
   const cover: ProjectCoverConfig = project.cover || {
     variant: 'single',
@@ -35,7 +22,9 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
     caption: project.description,
   };
 
-  const effectivePrimaryImage = customScreenshotUrl || localCustomImage || cover.primaryImage;
+  const customImage = customScreenshotUrl ? assetUrl(customScreenshotUrl) : undefined;
+  const effectivePrimaryImage = customImage || (cover.primaryImage ? assetUrl(cover.primaryImage) : undefined);
+  const imageError = failedSource === effectivePrimaryImage;
   const isModal = size === 'modal';
   const isCompact = size === 'compact';
 
@@ -44,6 +33,12 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
     : isCompact
     ? 'min-h-[160px]'
     : 'min-h-[270px] sm:min-h-[310px]';
+
+  if (customImage && !imageError) {
+    return <div className={`relative w-full ${containerHeight} bg-gradient-to-br from-[#f5f6f8] via-[#eceef2] to-[#e2e5eb] flex items-center justify-center p-5 sm:p-7`}>
+      <img src={customImage} alt={`${project.title} custom cover`} onError={() => setFailedSource(customImage)} className="w-full max-h-[310px] object-contain rounded-2xl" />
+    </div>;
+  }
 
   // -------------------------------------------------------------
   // 1. FRECHAT: FLAGSHIP ANDROID AI ASSISTANT & CLOUD ROUTING
@@ -75,7 +70,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           {/* Glassmorphic Brand Emblem */}
           <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/95 backdrop-blur-md border border-white/80 shadow-[0_16px_40px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.03)] flex items-center justify-center p-4 sm:p-5 mb-4">
             <img
-              src="/assets/projects/freechat/logo_transparent.png"
+              src={assetUrl('/assets/projects/freechat/logo_transparent.png')}
               alt="FreeChat Brand Mark"
               className="w-full h-full object-contain filter drop-shadow-xs"
               loading="lazy"
@@ -121,9 +116,11 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <div className="relative w-full rounded-2xl overflow-hidden border border-neutral-300/80 shadow-[0_16px_40px_rgba(15,23,42,0.12),0_2px_8px_rgba(0,0,0,0.04)] bg-slate-950 transition-all duration-500 ease-out group-hover:scale-[1.025] group-hover:shadow-[0_22px_48px_rgba(15,23,42,0.18)]">
             <img
               src={effectivePrimaryImage}
+              srcSet={!customScreenshotUrl ? `${assetUrl('/assets/projects/worldbox/world-menu-background-480.webp')} 480w, ${assetUrl('/assets/projects/worldbox/world-menu-background-960.webp')} 960w, ${effectivePrimaryImage} 1672w` : undefined}
+              sizes="(min-width: 768px) 480px, calc(100vw - 80px)"
               alt="WorldBox-React Procedural Generation Screenshot"
               loading="lazy"
-              onError={() => setImageError(true)}
+              onError={() => setFailedSource(effectivePrimaryImage || null)}
               className="w-full max-h-[220px] sm:max-h-[255px] object-cover object-center"
             />
           </div>
@@ -231,7 +228,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
               src={effectivePrimaryImage}
               alt="Luma Pulse Aura Real Screenshot"
               loading="lazy"
-              onError={() => setImageError(true)}
+              onError={() => setFailedSource(effectivePrimaryImage || null)}
               className="w-full max-h-[230px] sm:max-h-[265px] object-contain"
             />
           </div>
@@ -269,7 +266,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
               src={effectivePrimaryImage}
               alt={project.title}
               loading="lazy"
-              onError={() => setImageError(true)}
+              onError={() => setFailedSource(effectivePrimaryImage || null)}
               className="w-full max-h-[220px] sm:max-h-[250px] object-contain"
             />
           </div>
@@ -280,7 +277,7 @@ export const ProjectCover: React.FC<ProjectCoverProps> = ({
           <div className="w-16 h-16 rounded-2xl bg-neutral-100 border border-neutral-200 flex items-center justify-center p-3 mb-3 shadow-2xs overflow-hidden">
             {cover.logoUrl ? (
               <img
-                src={cover.logoUrl}
+                src={assetUrl(cover.logoUrl)}
                 alt={`${project.title} logo`}
                 className="w-full h-full object-contain"
                 loading="lazy"

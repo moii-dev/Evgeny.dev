@@ -2,5 +2,5 @@
   "name": "Evgeny.dev — Developer Portfolio",
   "description": "Portfolio of Evgeny, an Android, UI/UX, and Web developer crafting thoughtful digital experiences and modern applications.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }

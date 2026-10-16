@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { X, Search, ExternalLink, Star, ArrowUpRight, RefreshCw } from 'lucide-react';
 import { Project } from '../types/project';
+import { Modal } from './Modal';
 
 interface Props {
+  githubNotice: string;
   isOpen: boolean;
   onClose: () => void;
   projects: Project[];
@@ -12,6 +14,7 @@ interface Props {
 }
 
 export const AllProjectsModal: React.FC<Props> = ({
+  githubNotice,
   isOpen,
   onClose,
   projects,
@@ -56,8 +59,9 @@ export const AllProjectsModal: React.FC<Props> = ({
   });
 
   return (
+    <Modal isOpen={isOpen} onClose={onClose} label="All Projects & Repositories">
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-5xl h-[88vh] bg-[#fbfbfb] rounded-[28px] sm:rounded-[36px] shadow-2xl border border-neutral-200 overflow-hidden flex flex-col">
+      <div className="relative w-full max-w-5xl h-[88dvh] bg-[#fbfbfb] rounded-[28px] sm:rounded-[36px] shadow-2xl border border-neutral-200 overflow-y-auto overscroll-contain flex flex-col">
         {/* Header */}
         <div className="p-6 sm:p-8 border-b border-neutral-200/80 bg-white flex flex-col gap-4">
           <div className="flex items-center justify-between">
@@ -75,12 +79,14 @@ export const AllProjectsModal: React.FC<Props> = ({
                 onClick={onRefresh}
                 disabled={isLoading}
                 title="Sync from GitHub API"
+                aria-label="Refresh catalog"
                 className="p-2.5 rounded-full border border-neutral-200 hover:bg-neutral-100 text-neutral-600 hover:text-black transition-colors"
               >
                 <RefreshCw size={15} className={isLoading ? 'animate-spin' : ''} />
               </button>
               <button
                 onClick={onClose}
+                aria-label="Close catalog"
                 className="w-10 h-10 rounded-full bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-700 transition-colors"
               >
                 <X size={18} />
@@ -94,6 +100,7 @@ export const AllProjectsModal: React.FC<Props> = ({
               <Search size={15} className="absolute left-3.5 top-3 text-neutral-400" />
               <input
                 type="text"
+                aria-label="Search projects"
                 placeholder="Search projects by name, tech..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -102,7 +109,7 @@ export const AllProjectsModal: React.FC<Props> = ({
             </div>
 
             {/* Filter Tabs */}
-            <div className="flex items-center gap-1.5 p-1 bg-neutral-100 rounded-full text-xs font-medium self-start sm:self-auto overflow-x-auto">
+            <div className="flex max-w-full shrink-0 items-center gap-1.5 p-1 bg-neutral-100 rounded-full text-xs font-medium self-start sm:self-auto overflow-x-auto">
               <button
                 onClick={() => setFilter('all')}
                 className={`px-3.5 py-1.5 rounded-full transition-colors ${
@@ -140,7 +147,8 @@ export const AllProjectsModal: React.FC<Props> = ({
         </div>
 
         {/* Repositories Grid Container */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8">
+        <p role="status" className="px-6 pt-3 text-xs text-neutral-500 sm:px-8">{githubNotice}</p>
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8" data-catalog-scroll>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((proj) => (
               <div
@@ -203,10 +211,10 @@ export const AllProjectsModal: React.FC<Props> = ({
 
                   <div className="flex items-center justify-between text-[11px] text-neutral-500 pt-2 border-t border-neutral-100">
                     <span>{proj.language || 'Code'}</span>
-                    <span className="flex items-center gap-1 text-black font-medium group-hover:translate-x-0.5 transition-transform">
+                    <button type="button" onClick={event => { event.stopPropagation(); onSelectProject(proj); }} aria-label={`View ${proj.title} details`} className="flex items-center gap-1 text-black font-medium group-hover:translate-x-0.5 transition-transform">
                       <span>Details</span>
                       <ArrowUpRight size={12} />
-                    </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -221,5 +229,6 @@ export const AllProjectsModal: React.FC<Props> = ({
         </div>
       </div>
     </div>
+    </Modal>
   );
 };

@@ -1,124 +1,128 @@
-import { GitHubRepo, Project } from '../types/project';
-import { ALL_LOCAL_PROJECTS, FEATURED_PROJECTS } from '../data/featuredProjects';
+import type { GitHubRepo, Project } from '../types/project';
+import { ALL_LOCAL_PROJECTS } from '../data/featuredProjects';
+import { readJson, storage } from '../utils/storage';
+import { isProjectList, record } from '../utils/projectValidation';
+import { httpUrl } from '../utils/urls';
+import { withDeadline } from '../utils/request';
 
-const CACHE_KEY = 'evgeny_portfolio_github_repos_v4';
-const CACHE_TIMESTAMP_KEY = 'evgeny_portfolio_github_timestamp_v4';
-const CACHE_TTL = 1000 * 60 * 30; // 30 minutes
-
-export interface GitHubStats {
-  repoCount: number;
-  totalStars: number;
-  techCount: number;
-  lastUpdated: string;
-}
-
-export async function fetchGitHubRepos(username = 'moii-dev', forceRefresh = false): Promise<{
+const CACHE_TTL = 30 * 60 * 1000;
+const OWNER = 'moii-dev';
+interface Snapshot { username: string; updatedAt: number; repos: Project[] }
+const lastGood = new Map<string, Snapshot>();
+export interface GitHubResult {
   repos: Project[];
   fromCache: boolean;
+  source: 'live' | 'cache' | 'local';
+  lastUpdated?: number;
   error?: string;
-}> {
-  if (!forceRefresh) {
-    try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
-      if (cached && timestamp && Date.now() - parseInt(timestamp, 10) < CACHE_TTL) {
-        const parsed: Project[] = JSON.parse(cached);
-        return { repos: parsed, fromCache: true };
-      }
-    } catch {
-      // Ignore localStorage errors
+  warning?: string;
+}
+interface Options { signal?: AbortSignal; timeoutMs?: number; maxPages?: number }
+
+export function repositoryIdentity(url: string): string {
+  try {
+    const parsed = new URL(url);
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    return parsed.hostname === 'github.com' && parts.length === 2 ? `${parts[0]}/${parts[1]}`.toLowerCase() : '';
+  } catch { return ''; }
+}
+
+function localProjects(username: string): Project[] { return username === OWNER ? ALL_LOCAL_PROJECTS : []; }
+function numberProjects(projects: Project[]): Project[] {
+  return projects.map((project, index) => ({ ...project, number: String(index + 1).padStart(2, '0') }));
+}
+
+export function mergeGitHubProjects(repos: GitHubRepo[], username: string, previous: Project[] = []): Project[] {
+  const merged = new Map<string, Project>();
+  const identity = (project: Project) => repositoryIdentity(project.githubUrl) || `local:${project.id}`;
+  for (const project of [...localProjects(username), ...previous]) {
+    if (!merged.has(identity(project))) merged.set(identity(project), project);
+  }
+  for (const repo of repos) {
+    if (repo.fork || repo.name.toLowerCase() === username) continue;
+    const key = repositoryIdentity(repo.html_url);
+    if (!key || key.split('/')[0] !== username) continue;
+    const local = merged.get(key);
+    const demo = httpUrl(repo.homepage) || local?.demoUrl;
+    const demoUrl = demo && repositoryIdentity(demo) !== key ? demo : undefined;
+    const tags = [...new Set([repo.language, ...(repo.topics || []).slice(0, 3)].filter((tag): tag is string => Boolean(tag)))];
+    const project: Project = local ? {
+      ...local, stars: repo.stargazers_count, forks: repo.forks_count,
+      updatedAt: repo.updated_at.split('T')[0], demoUrl,
+    } : {
+      id: repo.name.toLowerCase(), number: '', title: repo.name,
+      category: repo.language ? `${repo.language} Project` : 'Software / Tool',
+      description: repo.description || 'Open source software and engineering project.',
+      tags: tags.length ? tags : ['Open Source', 'Software'], githubUrl: repo.html_url,
+      demoUrl, stars: repo.stargazers_count, forks: repo.forks_count,
+      updatedAt: repo.updated_at.split('T')[0], featured: false, language: repo.language || undefined,
+      cover: { variant: 'editorial', backgroundTheme: 'silver', badgeText: repo.language || 'Open Source', caption: repo.description || 'GitHub Repository' },
+    };
+    merged.set(key, project);
+  }
+  return numberProjects([...merged.values()]);
+}
+
+function readSnapshot(username: string): Snapshot | undefined {
+  const saved = readJson(`evgeny_portfolio_github_repos_v5_${username}`);
+  let snapshot: Snapshot | undefined;
+  if (record(saved) && saved.username === username && typeof saved.updatedAt === 'number' &&
+    Number.isFinite(saved.updatedAt) && saved.updatedAt > 0 && saved.updatedAt <= Date.now() && isProjectList(saved.repos)) {
+    snapshot = { username, updatedAt: saved.updatedAt, repos: numberProjects(saved.repos) };
+  } else if (username === OWNER) {
+    // Only the original owner used the v4 keys. Keep legacy data as an offline fallback.
+    const legacy = readJson('evgeny_portfolio_github_repos_v4');
+    const updatedAt = Number(storage.get('evgeny_portfolio_github_timestamp_v4'));
+    if (isProjectList(legacy) && updatedAt > 0 && updatedAt <= Date.now()) {
+      snapshot = { username, updatedAt: Math.min(updatedAt, Date.now() - CACHE_TTL), repos: mergeGitHubProjects([], username, legacy) };
     }
   }
+  const memory = lastGood.get(username);
+  return memory && (!snapshot || memory.updatedAt >= snapshot.updatedAt) ? memory : snapshot;
+}
 
+function isGitHubRepo(value: unknown): value is GitHubRepo {
+  return record(value) && typeof value.name === 'string' && Boolean(value.name) && Boolean(httpUrl(value.html_url)) &&
+    typeof value.fork === 'boolean' && typeof value.updated_at === 'string' && /^\d{4}-\d{2}-\d{2}T/.test(value.updated_at) &&
+    ['stargazers_count', 'forks_count'].every(key => typeof value[key] === 'number' && Number.isFinite(value[key]) && value[key] >= 0) &&
+    ['description', 'homepage', 'language'].every(key => value[key] === null || typeof value[key] === 'string') &&
+    (value.topics === undefined || (Array.isArray(value.topics) && value.topics.every(topic => typeof topic === 'string')));
+}
+
+export async function fetchGitHubRepos(username = OWNER, forceRefresh = false, options: Options = {}): Promise<GitHubResult> {
+  username = username.toLowerCase();
+  const cached = readSnapshot(username);
+  if (!forceRefresh && cached && Date.now() - cached.updatedAt < CACHE_TTL) {
+    return { repos: cached.repos, fromCache: true, source: 'cache', lastUpdated: cached.updatedAt };
+  }
   try {
-    const res = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`, {
-      headers: {
-        Accept: 'application/vnd.github.v3+json',
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error(`GitHub API returned status ${res.status}`);
-    }
-
-    const data: GitHubRepo[] = await res.json();
-
-    // Filter out forks and profile repository
-    const filtered = data.filter((repo) => !repo.fork && repo.name !== username);
-
-    // Map and enrich with local metadata
-    const mapped: Project[] = filtered.map((repo, idx) => {
-      const localMatch = ALL_LOCAL_PROJECTS.find(
-        (p) => p.title.toLowerCase() === repo.name.toLowerCase() || p.id.toLowerCase() === repo.name.toLowerCase()
-      );
-
-      const numStr = (idx + 1).toString().padStart(2, '0');
-
-      if (localMatch) {
-        return {
-          ...localMatch,
-          stars: repo.stargazers_count ?? localMatch.stars,
-          forks: repo.forks_count,
-          githubUrl: repo.html_url,
-          demoUrl: repo.homepage || localMatch.demoUrl,
-          updatedAt: repo.updated_at.split('T')[0],
-          cover: localMatch.cover,
-        };
+    if (!/^[a-z\d](?:[a-z\d-]{0,37}[a-z\d])?$/.test(username)) throw new Error('Invalid GitHub username.');
+    const { repos, truncated } = await withDeadline(async signal => {
+      const repos: GitHubRepo[] = [];
+      const maxPages = Math.max(1, Math.min(10, options.maxPages ?? 10));
+      for (let page = 1; page <= maxPages; page++) {
+        const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=100&page=${page}`, {
+          headers: { Accept: 'application/vnd.github+json' }, signal,
+        });
+        if (!response.ok) throw new Error([403, 429].includes(response.status)
+          ? `GitHub rate limit or access restriction (${response.status}). Please try again later.`
+          : `GitHub is unavailable (${response.status}). Please try again.`);
+        const data: unknown = await response.json();
+        if (!Array.isArray(data) || !data.every(isGitHubRepo)) throw new Error('GitHub returned an invalid response. Please try again.');
+        repos.push(...data);
+        const hasNext = /rel="next"/.test(response.headers.get('link') || '') || data.length === 100;
+        if (!hasNext) return { repos, truncated: false };
       }
-
-      // Infer tags from language
-      const inferredTags: string[] = [];
-      if (repo.language) inferredTags.push(repo.language);
-      if (repo.topics && Array.isArray(repo.topics)) {
-        inferredTags.push(...repo.topics.slice(0, 3));
-      }
-
-      return {
-        id: repo.name.toLowerCase(),
-        number: numStr,
-        title: repo.name,
-        category: repo.language ? `${repo.language} Project` : 'Software / Tool',
-        description: repo.description || 'Open source software and engineering project by Evgeny.',
-        tags: inferredTags.length > 0 ? inferredTags : ['Open Source', 'Software'],
-        githubUrl: repo.html_url,
-        demoUrl: repo.homepage || undefined,
-        stars: repo.stargazers_count,
-        forks: repo.forks_count,
-        updatedAt: repo.updated_at.split('T')[0],
-        featured: false,
-        language: repo.language || undefined,
-        cover: {
-          variant: 'editorial',
-          backgroundTheme: 'silver',
-          badgeText: repo.language || 'Open Source',
-          caption: repo.description || 'GitHub Repository',
-        },
-      };
-    });
-
-    // Make sure all featured projects (including custom ones like Вкапибара and EverUs) are preserved
-    const finalProjects: Project[] = [...FEATURED_PROJECTS];
-    for (const p of mapped) {
-      if (!finalProjects.some((fp) => fp.id.toLowerCase() === p.id.toLowerCase() || fp.title.toLowerCase() === p.title.toLowerCase())) {
-        finalProjects.push(p);
-      }
-    }
-
-    // Cache locally
-    try {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(finalProjects));
-      localStorage.setItem(CACHE_TIMESTAMP_KEY, Date.now().toString());
-    } catch {
-      // Ignore
-    }
-
-    return { repos: finalProjects, fromCache: false };
-  } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-    return {
-      repos: ALL_LOCAL_PROJECTS,
-      fromCache: true,
-      error: errorMsg,
-    };
+      return { repos, truncated: true };
+    }, options.timeoutMs, options.signal);
+    const projects = mergeGitHubProjects(repos, username, truncated ? cached?.repos : []);
+    const snapshot: Snapshot = { username, updatedAt: Date.now(), repos: projects };
+    lastGood.set(username, snapshot);
+    storage.set(`evgeny_portfolio_github_repos_v5_${username}`, JSON.stringify(snapshot));
+    return { repos: projects, fromCache: false, source: 'live', lastUpdated: snapshot.updatedAt,
+      warning: truncated ? 'Repository page limit reached. Previously saved projects are retained.' : undefined };
+  } catch (error) {
+    return { repos: cached?.repos || localProjects(username), fromCache: true, source: cached ? 'cache' : 'local',
+      lastUpdated: cached?.updatedAt, error: error instanceof Error ? error.message : 'GitHub could not be reached. Please try again.' };
   }
 }
